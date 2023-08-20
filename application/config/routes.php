@@ -56,5 +56,7 @@ $route['translate_uri_dashes'] = FALSE;
 $route['board'] = "board/index";
 $route['board/create'] = "board/create";
 $route['board/store']['post'] = "board/store";
-$route['board/show'] = "board/show";
+$route['board/edit/(:num)'] = "board/edit/$1";
+$route['board/update/(:num)']['put'] = "board/update/$1";
+
 

@@ -33,4 +33,15 @@ class Board_model extends CI_Model {
 		return $board;
 	}
 
+	public function update($idx)
+	{
+		$data = [
+			'title' => $this->input->post('title'),
+			'contents' => $this->input->post('contents')
+		];
+
+		$result = $this->db->where('idx', $idx)->update('boards', $data);
+		return $result;
+	}
+
 }

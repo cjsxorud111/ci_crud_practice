@@ -47,4 +47,22 @@ class Board extends CI_Controller
         $this->load->view('board/show', $data);
     }
 
+	public function edit($idx)
+	{
+		$data['edit'] = $this->board->get($idx);
+		$this->load->view('board/edit', $data);
+	}
+
+	public function update($idx)
+	{
+		$this->form_validation->set_rules('title', 'Title', 'required');
+		$this->form_validation->set_rules('contents', 'Contents', 'required');
+
+		if ($this->form_validation->run()) {
+			$this->board->update($idx);
+			redirect('/board');
+		} else {
+			echo "Error";
+		}
+	}
 }

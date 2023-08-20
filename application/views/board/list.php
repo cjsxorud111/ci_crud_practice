@@ -14,6 +14,7 @@
 		<td><?=$ls->regdate;?></td>
 		<td>
 			<a href="/board/show/<?=$ls->idx;?>">View</a>
+			<a href="/board/edit/<?=$ls->idx;?>">Edit</a>
 		</td>
 	</tr>
 
