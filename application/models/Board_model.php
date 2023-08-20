@@ -19,4 +19,18 @@ class Board_model extends CI_Model {
 		$result = $this->db->insert('boards', $data);
 		return $result;
     }
+
+	public function getAll()
+	{
+		$board = $this->db->get('boards')->result();
+
+		return $board;
+	}
+
+	public function get($idx)
+	{
+		$board = $this->db->get_where('boards', ['idx' => $idx])->row();
+		return $board;
+	}
+
 }
