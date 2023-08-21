@@ -20,9 +20,17 @@ class Board_model extends CI_Model {
 		return $result;
     }
 
-	public function getAll()
+	public function getAll($type="all", $limit=3, $page=1)
 	{
-		$board = $this->db->get('boards')->result();
+
+		if ($type=="count")
+		{
+			$board = $this->db->get('boards')->num_rows();
+		} else {
+			$this->db->limit($limit, $page);
+			$this->db->order_by('idx', 'desc');
+			$board = $this->db->get('boards')->result();
+		}
 
 		return $board;
 	}
@@ -41,6 +49,11 @@ class Board_model extends CI_Model {
 		];
 
 		$result = $this->db->where('idx', $idx)->update('boards', $data);
+		return $result;
+	}
+	public function delete($idx)
+	{
+		$result = $this->db->delete("boards", array('idx' => $idx));
 		return $result;
 	}
 

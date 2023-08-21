@@ -14,7 +14,21 @@ class Board extends CI_Controller
 
     public function index()
     {
-        $data['list'] = $this->board->getAll();
+		$this->load->library('pagination');
+
+		$config['base_url'] = '/board/';
+		$config['total_rows'] = $this->board->getAll('count', 0, 0);
+		$config['per_page'] = 3;
+		$config['uri_segment'] = 2;
+
+		$this->pagination->initialize($config);
+
+		$page = ($this->uri->segment(2)) ? $this->uri->segment(2) : 0;
+
+		$data['pages'] = $this->pagination->create_links();
+
+		$data['list'] = $this->board->getAll('all', $config['per_page'], $page);
+
         $this->load->view('board/list', $data);
     }
 
@@ -64,5 +78,10 @@ class Board extends CI_Controller
 		} else {
 			echo "Error";
 		}
+	}
+	public function delete($idx)
+	{
+		$item = $this->board->delete($idx);
+		redirect("/board");
 	}
 }

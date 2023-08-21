@@ -7,7 +7,6 @@
 	</tr>
 	<?php
 	foreach ($list as $ls) {
-
 	?>
 	<tr>
 		<td><?=$ls->title;?></td>
@@ -15,13 +14,19 @@
 		<td>
 			<a href="/board/show/<?=$ls->idx;?>">View</a>
 			<a href="/board/edit/<?=$ls->idx;?>">Edit</a>
+			<a href="/board/delete/<?=$ls->idx;?>">Delete</a>
 		</td>
 	</tr>
 
 	<?php
 	}
-
 	?>
+	<tr>
+		<th colspan="3">
+			<?=$pages;?>
+		</th>
+	</tr>
+
 </table>
 
 <a href="/board/create">글쓰기</a>
