@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,6 +9,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <body>
 
 웰컴~
+
+session : <?= $this->session->userdata('email') ?>
 <br/>
 <a href="/board">게시판</a>
 

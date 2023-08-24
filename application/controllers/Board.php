@@ -7,9 +7,12 @@ class Board extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->library('form_validation');
-
+        $this->load->library(['form_validation', 'session']);
         $this->load->model('Board_model', 'board');
+
+		if ( !$this->session->userdata('email') ) {
+			redirect('members/login');
+		}
     }
 
     public function index()
