@@ -45,11 +45,6 @@ class Board extends CI_Controller
         $this->form_validation->set_rules('title', 'Title', 'required');
         $this->form_validation->set_rules('contents', 'Contents', 'required');
 
-
-        /*$this->form_validation->run();
-        $this->board->store();
-        redirect('/board/create');*/
-
         if ($this->form_validation->run()) {
             $this->board->store();
             redirect('/board');
