@@ -35,12 +35,12 @@
 	<table id="plan-table">
 
 		<tr>
-			<th>1. 일정시작시간</th>
+			<th>1. 일정시작</th>
 			<td>
 				<input type="time" name="start_time[]" value=""/>
 			</td>
 
-			<th>일정마무리시간</th>
+			<th>일정마무리</th>
 			<td>
 				<input type="time" name="end_time[]" value=""/>
 			</td>
