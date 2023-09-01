@@ -8,6 +8,13 @@ class Plan_model extends CI_Model {
 
 	}
 
+	public function calculate_cost($cost_array)
+	{
+		foreach ($cost_array as $cost){
+
+		}
+	}
+
 	public function store()
 	{
 		$start_times = $this->input->post('start_time');
@@ -37,8 +44,10 @@ class Plan_model extends CI_Model {
 		// $datas를 DB에 저장
 		$result = $this->db->insert_batch('travel_plans', $datas);
 
-		return $result;
-
+		return array(
+			'datas' => $datas,
+			'total_travel_cost' => array_sum($travel_costs)
+		);
 	}
 
 	public function getAll($type="all", $limit=3, $page=1)
