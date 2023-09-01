@@ -12,25 +12,33 @@ class Plan_model extends CI_Model {
 	{
 		$start_times = $this->input->post('start_time');
 		$end_times = $this->input->post('end_time');
-		$plans = $this->input->post('plan');
-		$prices = $this->input->post('price');
+		$destination_names = $this->input->post('destination_name');
+		$travel_costs = $this->input->post('travel_cost');
 
 		// $datas 배열에 데이터를 담기 위한 루프
 		$datas = array();
+		$current_date = date('Y-m-d'); // 오늘 날짜를 가져옴
 
 		for ($i = 0; $i < count($start_times); $i++) {
+			$start_time = new DateTime($current_date . ' ' . $start_times[$i]);
+			$end_time = new DateTime($current_date . ' ' . $end_times[$i]);
+
+
 			$data = array(
-				'start_time' => $start_times[$i],
-				'end_time' => $end_times[$i],
-				'plan' => $plans[$i],
-				'price' => $prices[$i]
+				'start_time' => $start_time->format('H:i:s'),
+				'end_time' => $end_time->format('H:i:s'),
+				'destination_name' => $destination_names[$i],
+				'travel_cost' => $travel_costs[$i]
 			);
 			$datas[] = $data;
 		}
 		var_dump($datas);
 
-		/*$result = $this->db->insert('boards', $data);
-		return $result;*/
+		// $datas를 DB에 저장
+		$result = $this->db->insert_batch('travel_plans', $datas);
+
+		return $result;
+
 	}
 
 	public function getAll($type="all", $limit=3, $page=1)

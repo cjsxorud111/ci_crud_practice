@@ -47,12 +47,12 @@
 
 			<th>일정</th>
 			<td>
-				<input type="text" name="plan[]" value=""/>
+				<input type="text" name="destination_name[]" value=""/>
 			</td>
 
 			<th>경비</th>
 			<td>
-				<input type="text" name="price[]" value=""/>
+				<input type="text" name="travel_cost[]" value=""/>
 			</td>
 		</tr>
 	</table>
@@ -90,13 +90,13 @@
 			cell5.innerHTML = "<th>플랜</th>";
 
 			const cell6 = newRow.insertCell(6);
-			cell6.innerHTML = '<td><input type="text" name="plan[]" value=""/></td>';
+			cell6.innerHTML = '<td><input type="text" name="destination_name[]" value=""/></td>';
 
 			const cell7 = newRow.insertCell(7);
 			cell7.innerHTML = "<th>경비</th>";
 
 			const cell8 = newRow.insertCell(8);
-			cell8.innerHTML = '<td><input type="text" name="price[]" value=""/></td></tr>';
+			cell8.innerHTML = '<td><input type="text" name="travel_cost[]" value=""/></td></tr>';
 
 			rowCount++;
 		});
