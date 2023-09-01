@@ -52,7 +52,7 @@
 
 			<th>경비</th>
 			<td>
-				<input type="text" name="travel_cost[]" value=""/>
+				<input type="text" name="travel_cost[]" value="0"/>
 			</td>
 		</tr>
 	</table>
