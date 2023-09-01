@@ -96,7 +96,7 @@
 			cell7.innerHTML = "<th>경비</th>";
 
 			const cell8 = newRow.insertCell(8);
-			cell8.innerHTML = '<td><input type="text" name="travel_cost[]" value=""/></td></tr>';
+			cell8.innerHTML = '<td><input type="text" name="travel_cost[]" value="0"/></td></tr>';
 
 			rowCount++;
 		});
