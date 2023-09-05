@@ -19,25 +19,41 @@ class Plan_model extends CI_Model
 
 	public function fetch_exchange_rate()
 	{
+		// API 키를 변수에 저장합니다.
 		$apiKey = "703f1bcdb1bcabc463952e7a";
+
+		// 기준 통화로 KRW (한국 원화)를 설정합니다.
 		$baseCurrency = "KRW";
+
+		// exchangerate-api의 기본 URL을 변수에 저장합니다.
 		$endpoint = "https://v6.exchangerate-api.com/v6/";
 
+		// 위에서 정의한 변수들을 사용하여 완전한 API 요청 URL을 생성합니다.
 		$url = $endpoint . $apiKey . "/latest/" . $baseCurrency;
 
+		// cURL 세션을 초기화합니다.
 		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		$response = curl_exec($ch);
-		curl_close($ch);
 
-		if ($response !== false) {
-			$data = json_decode($response, true);
-			echo $data;
-		} else {
-			echo "API request failed";
+		// 요청 URL을 설정합니다.
+		curl_setopt($ch, CURLOPT_URL, $url);
+
+		// SSL 검증을 건너뛰기 위한 설정 (보안 상 권장되지 않음)
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+
+		// cURL 세션을 실행합니다.
+		if (!curl_exec($ch)) {
+			// API 요청이 실패한 경우 에러 메시지를 출력합니다.
+			echo "API request failed: " . curl_error($ch);
 		}
+
+		// cURL 세션을 종료합니다.
+		curl_close($ch);
 	}
+
+
+
+
 
 
 
