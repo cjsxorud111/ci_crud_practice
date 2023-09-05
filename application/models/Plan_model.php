@@ -1,5 +1,7 @@
 <?php
-class Plan_model extends CI_Model {
+
+class Plan_model extends CI_Model
+{
 
 	public function __construct()
 	{
@@ -10,10 +12,36 @@ class Plan_model extends CI_Model {
 
 	public function calculate_cost($cost_array)
 	{
-		foreach ($cost_array as $cost){
+		foreach ($cost_array as $cost) {
 
 		}
 	}
+
+	public function fetch_exchange_rate()
+	{
+		$apiKey = "703f1bcdb1bcabc463952e7a";
+		$baseCurrency = "KRW";
+		$endpoint = "https://v6.exchangerate-api.com/v6/";
+
+		$url = $endpoint . $apiKey . "/latest/" . $baseCurrency;
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		$response = curl_exec($ch);
+		curl_close($ch);
+
+		if ($response !== false) {
+			$data = json_decode($response, true);
+			echo $data;
+		} else {
+			echo "API request failed";
+		}
+	}
+
+
+
+
 
 	public function store()
 	{
@@ -21,6 +49,7 @@ class Plan_model extends CI_Model {
 		$end_times = $this->input->post('end_time');
 		$destination_names = $this->input->post('destination_name');
 		$travel_costs = $this->input->post('travel_cost');
+		$currency = $this->input->post('currency');
 
 		// $datas 배열에 데이터를 담기 위한 루프
 		$datas = array();
@@ -30,7 +59,6 @@ class Plan_model extends CI_Model {
 			$start_time = new DateTime($current_date . ' ' . $start_times[$i]);
 			$end_time = new DateTime($current_date . ' ' . $end_times[$i]);
 
-
 			$data = array(
 				'start_time' => $start_time->format('H:i:s'),
 				'end_time' => $end_time->format('H:i:s'),
@@ -39,10 +67,11 @@ class Plan_model extends CI_Model {
 			);
 			$datas[] = $data;
 		}
-		var_dump($datas);
 
 		// $datas를 DB에 저장
 		$result = $this->db->insert_batch('travel_plans', $datas);
+
+		$this->fetch_exchange_rate();
 
 		return array(
 			'datas' => $datas,
@@ -50,11 +79,10 @@ class Plan_model extends CI_Model {
 		);
 	}
 
-	public function getAll($type="all", $limit=3, $page=1)
+	public function getAll($type = "all", $limit = 3, $page = 1)
 	{
 
-		if ($type=="count")
-		{
+		if ($type == "count") {
 			$board = $this->db->get('boards')->num_rows();
 		} else {
 			$this->db->limit($limit, $page);
@@ -81,6 +109,7 @@ class Plan_model extends CI_Model {
 		$result = $this->db->where('idx', $idx)->update('boards', $data);
 		return $result;
 	}
+
 	public function delete($idx)
 	{
 		$result = $this->db->delete("boards", array('idx' => $idx));
