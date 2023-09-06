@@ -41,21 +41,61 @@ class Plan_model extends CI_Model
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 
-		// cURL 세션을 실행합니다.
-		if (!curl_exec($ch)) {
-			// API 요청이 실패한 경우 에러 메시지를 출력합니다.
-			echo "API request failed: " . curl_error($ch);
-		}
+		// cURL이 반환한 결과를 변수에 저장하도록 설정
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+		// cURL 세션을 실행하고 결과를 $response 변수에 저장합니다.
+		$response = curl_exec($ch);
 
 		// cURL 세션을 종료합니다.
 		curl_close($ch);
+
+		if ($response === false) {
+			// API 요청이 실패한 경우 에러 메시지를 출력합니다.
+			echo "API request failed: " . curl_error($ch);
+			return;
+		}
+
+		// API 응답을 JSON으로 파싱합니다.
+		$responseData = json_decode($response, true);
+
+		// "conversion_rates" 데이터를 반환합니다.
+		return $responseData['conversion_rates'];
 	}
 
 
+	public function update_exchange_rate()
+	{
+		// 1. 마지막 업데이트 날짜 조회
+		$query = $this->db->select('update_date')->limit(1)->get('last_update');
+		$lastUpdate = $query->row()->update_date;
 
+		$today = date('Y-m-d');
 
+		// 오늘 날짜와 마지막 업데이트 날짜가 같으면 함수 종료
+		if ($lastUpdate == $today) {
+			return;
+		}
 
+		$conversion_rates = $this->fetch_exchange_rate();
 
+		if (!$conversion_rates) {
+			return;
+		}
+
+		// (환율 정보 업데이트 로직)
+		foreach ($conversion_rates as $currency => $rate) {
+			$data = array(
+				'currency_code' => $currency,
+				'rate' => $rate
+			);
+
+			$this->db->where('currency_code', $currency)->update('exchange_rates', $data);
+		}
+
+		// 환율 정보 업데이트 후, 마지막 업데이트 날짜를 오늘 날짜로 갱신
+		$this->db->set('update_date', $today)->where('id', 1)->update('last_update');
+	}
 
 
 
@@ -87,7 +127,7 @@ class Plan_model extends CI_Model
 		// $datas를 DB에 저장
 		$result = $this->db->insert_batch('travel_plans', $datas);
 
-		$this->fetch_exchange_rate();
+		$this->update_exchange_rate();
 
 		return array(
 			'datas' => $datas,
