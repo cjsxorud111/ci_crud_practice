@@ -67,10 +67,14 @@ class Plan_model extends CI_Model
 	public function update_exchange_rate()
 	{
 		// 1. 마지막 업데이트 날짜 조회
-		$query = $this->db->select('update_date')->limit(1)->get('last_update');
+		$query = $this->db->select('update_date')
+			->from('exchange_rates')
+			->limit(1)
+			->get();
 		$lastUpdate = $query->row()->update_date;
 
 		$today = date('Y-m-d');
+
 
 		// 오늘 날짜와 마지막 업데이트 날짜가 같으면 함수 종료
 		if ($lastUpdate == $today) {
@@ -87,14 +91,13 @@ class Plan_model extends CI_Model
 		foreach ($conversion_rates as $currency => $rate) {
 			$data = array(
 				'currency_code' => $currency,
-				'rate' => $rate
+				'exchange_rate' => $rate,
+				'update_date' => $today
 			);
 
 			$this->db->where('currency_code', $currency)->update('exchange_rates', $data);
 		}
 
-		// 환율 정보 업데이트 후, 마지막 업데이트 날짜를 오늘 날짜로 갱신
-		$this->db->set('update_date', $today)->where('id', 1)->update('last_update');
 	}
 
 
@@ -105,7 +108,7 @@ class Plan_model extends CI_Model
 		$end_times = $this->input->post('end_time');
 		$destination_names = $this->input->post('destination_name');
 		$travel_costs = $this->input->post('travel_cost');
-		$currency = $this->input->post('currency');
+		$currency_code = $this->input->post('currency');
 
 		// $datas 배열에 데이터를 담기 위한 루프
 		$datas = array();
@@ -125,15 +128,53 @@ class Plan_model extends CI_Model
 		}
 
 		// $datas를 DB에 저장
-		$result = $this->db->insert_batch('travel_plans', $datas);
+		$this->db->insert_batch('travel_plans', $datas);
 
 		$this->update_exchange_rate();
 
 		return array(
 			'datas' => $datas,
-			'total_travel_cost' => array_sum($travel_costs)
+			'total_travel_cost' => $this->convert_to_krw_sum($travel_costs, $currency_code)
 		);
 	}
+
+
+	public function convert_to_krw_sum($travel_costs, $currency_code) {
+		$total_krw = 0; // KRW로 변환된 금액의 총합을 저장할 변수
+
+		// 각 currency_code별로 travel_costs의 값을 KRW로 변환하고 합산합니다.
+		for ($i = 0; $i < count($travel_costs); $i++) {
+			if ($currency_code[$i] !== 'KRW') {
+				$total_krw += $this->convert_to_krw($travel_costs[$i], $currency_code[$i]);
+			} else {
+				$total_krw += $travel_costs[$i];
+			}
+		}
+
+		return $total_krw; // KRW로 변환된 금액의 총합을 반환합니다.
+	}
+
+	public function convert_to_krw($amount, $currency_code) {
+		// 국가코드를 기준으로 exchange_rates 테이블에서 환율을 조회
+		$this->db->select('exchange_rate');
+		$this->db->from('exchange_rates');
+		$this->db->where('currency_code', $currency_code);
+		$query = $this->db->get();
+
+		// 결과가 없으면 null을 반환
+		if ($query->num_rows() == 0) {
+			return null;
+		}
+
+		// 환율을 가져옵니다.
+		$exchange_rate = $query->row()->exchange_rate;
+
+		// 입력받은 금액에 환율을 곱하여 KRW로 변환
+		$converted_amount = $amount * (1 / $exchange_rate);
+
+		return $converted_amount;
+	}
+
 
 	public function getAll($type = "all", $limit = 3, $page = 1)
 	{
