@@ -144,10 +144,13 @@ class Plan_model extends CI_Model
 
 		// 각 currency_code별로 travel_costs의 값을 KRW로 변환하고 합산합니다.
 		for ($i = 0; $i < count($travel_costs); $i++) {
+			// $travel_costs의 값을 실수로 변환합니다.
+			$cost = floatval($travel_costs[$i]);
+
 			if ($currency_code[$i] !== 'KRW') {
-				$total_krw += $this->convert_to_krw($travel_costs[$i], $currency_code[$i]);
+				$total_krw += $this->convert_to_krw($cost, $currency_code[$i]);
 			} else {
-				$total_krw += $travel_costs[$i];
+				$total_krw += $cost;
 			}
 		}
 
