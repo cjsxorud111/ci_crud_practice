@@ -5,30 +5,20 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>메인</title>
 	<style>
-
 		.btn-group .dropdown-menu {
-			min-width: auto; /* 드롭다운 메뉴의 최소 너비를 자동으로 설정 */
-			left: 0; /* 드롭다운 메뉴의 위치를 왼쪽으로 설정 */
-		}
-
-		table {
-			min-width: 800px; /* adjust this value as needed */
-		}
-
-		table th, table td {
-			white-space: nowrap;
+			min-width: auto;
+			left: 0;
 		}
 
 		.logo {
 			display: flex;
 			align-items: center;
 			padding: 10px;
-            margin-top: 20px;
-            margin-left: 40px;
-            margin-bottom: 60px;
+			margin: 20px 0 60px 40px;
 		}
 
-		.logo img {
+		.logo img,
+		img {
 			width: 40px;
 			height: 40px;
 			margin-right: 10px;
@@ -44,101 +34,63 @@
 			height: 150px;
 			object-fit: cover;
 		}
-        table th {
-            text-align: center;
-        }
 
-        table td {
-            text-align: center;
-        }
+		.table {
+			min-width: 800px;
+			overflow: visible;
+			z-index: 5;
+			border-collapse: collapse;
+			width: 100%;
+		}
 
-        .table-responsive {
-            overflow: visible;
-        }
+		.table th,
+		.table td {
+			white-space: nowrap;
+			text-align: center;
+			border: none;
+		}
 
-        .table {
-            overflow: visible;
-        }
-
-        .table td, .table th {
-            overflow: visible;
-        }
-
-        .table .btn-group {
-            position: static;
-        }
+		.table-responsive {
+			border: 1px solid #dee2e6;
+			border-radius: 10px;
+			padding: 10px;
+			background-color: #ffffff;
+			overflow: auto;
+			box-shadow: 0 0 16px rgba(0, 0, 0, 0.1);
+			z-index: 5;
+			position: relative;
+		}
 
 		.cost-input-group .form-control {
 			border-top-right-radius: 0;
 			border-bottom-right-radius: 0;
 		}
+
 		.cost-input-group .btn-group {
 			border-top-left-radius: 0;
 			border-bottom-left-radius: 0;
 		}
 
-		.table-responsive {
-			border: 1px solid #dee2e6;  /* 테두리 색상 */
-			border-radius: 10px;       /* 둥근 모서리 */
-			padding: 10px;             /* 테두리와 표 사이의 간격 */
-			background-color: #ffffff; /* 배경색 */
-			overflow: auto;            /* 스크롤바 표시 */
-			box-shadow: 0 0 16px rgba(0, 0, 0, 0.1); /* 그림자 */
-		}
-
-		.table {
-			border-collapse: collapse;
-			width: 100%;
-		}
-
-		.table th, .table td {
-			border: none;
-		}
-
-		/* 기존 CSS 코드는 그대로 유지하면서 추가된 부분만 표시합니다. */
-		.table-responsive {
-			position: relative; /* 상대 위치 설정 */
-		}
-
-		#add-button, input[type="submit"] {
-			z-index: 10; /* z-index 값을 높여서 버튼이 다른 요소 위에 올라오도록 설정 */
-			background-color: #007bff; /* 버튼의 배경색을 파란색으로 설정 */
-			color: #ffffff; /* 버튼의 글자색을 흰색으로 설정 */
-			border: none; /* 버튼의 border를 제거 */
-			position: absolute; /* 절대 위치 설정 */
-			bottom: 0; /* 버튼을 아래로 이동시켜 border와 겹치게 함 */
-			transform: translateY(50%); /* 버튼의 위치를 조정하여 완전히 중앙에 오도록 함 */
-		}
-
-		#add-button {
-			left: 50%; /* 버튼을 중앙에 배치 */
-			transform: translate(-50%, 50%); /* 버튼의 위치를 조정하여 완전히 중앙에 오도록 함 */
-		}
-
+		#add-button,
 		input[type="submit"] {
-			right: 5%; /* 버튼을 오른쪽에 배치 */
-			transform: translateY(50%); /* 버튼의 위치를 조정하여 완전히 중앙에 오도록 함 */
+			z-index: 10;
+			background-color: #007bff;
+			color: #ffffff;
+			border: none;
+			text-align: center;
+			top: 0;
 		}
 
-		#add-button, input[type="submit"] {
-			margin-bottom: 10px; /* 버튼과 테이블 사이의 간격을 조정 */
+		#for-button-control {
+			text-align: center;
 		}
 
-		/* 화면 크기가 768px 이하일 때의 스타일 */
-		@media (max-width: 768px) {
-			#add-button, input[type="submit"] {
-				position: static; /* 기본 위치 설정 */
-				transform: none; /* 위치 조정 제거 */
-				margin-top: 10px; /* 버튼 상단 여백 추가 */
-			}
-
-			.table-responsive {
-				margin-bottom: 10px; /* 버튼과의 간격 조정 */
-			}
+		#for-button-control .centered-content {
+			display: inline-block;
+			text-align: left;
 		}
-
-
 	</style>
+
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-latest.min.js"></script>
@@ -161,8 +113,8 @@
                     <tr>
                         <th width="20%">일정 시작시간</th>
                         <th width="20%">일정 마무리시간</th>
-                        <th width="20%">여행지, 교통편 등</th>
-						<th width="40%">여행 경비 및 통화</th> <!-- 열 이름을 변경하였습니다. -->
+                        <th width="30%">여행지, 교통편 등</th>
+						<th width="30%">여행 경비 및 통화</th> <!-- 열 이름을 변경하였습니다. -->
                     </tr>
                 </thead>
 
@@ -475,12 +427,9 @@
 
 </form>
 
-	<div style="width: 90%; text-align: center; margin-bottom: 10px;">
 		<button class="btn btn-primary" id="add-button">일정추가</button>
-	</div>
-	<div style="width: 90%; text-align: right;">
 		<input type="submit" class="btn btn-primary" value="예산계산" form="plan-form">
-	</div>
+
 </div>
 <script>
     $(document).ready(function(){
@@ -513,7 +462,6 @@
 		document.querySelectorAll(".dropdown-menu").forEach(function (dropdownMenu, index) {
 			updateCurrencyValue(dropdownMenu, index);
 		});
-
 
 		addButton.addEventListener("click", function () {
 			const newRow = planTable.insertRow(-1);
@@ -592,12 +540,9 @@
 				rowCount--;
 			});
 
-
-
 			$(".dropdown-menu").each(function(index, dropdownMenu) {
 				updateCurrencyValue($(dropdownMenu), index);
 			});
-
 		});
 	});
 </script>
