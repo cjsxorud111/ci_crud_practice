@@ -5,9 +5,16 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>메인</title>
 	<style>
+
+		.btn-group .dropdown-menu {
+			min-width: auto; /* 드롭다운 메뉴의 최소 너비를 자동으로 설정 */
+			left: 0; /* 드롭다운 메뉴의 위치를 왼쪽으로 설정 */
+		}
+
 		table {
 			min-width: 800px; /* adjust this value as needed */
 		}
+
 		table th, table td {
 			white-space: nowrap;
 		}
@@ -61,7 +68,77 @@
             position: static;
         }
 
-    </style>
+		.cost-input-group .form-control {
+			border-top-right-radius: 0;
+			border-bottom-right-radius: 0;
+		}
+		.cost-input-group .btn-group {
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
+		}
+
+		.table-responsive {
+			border: 1px solid #dee2e6;  /* 테두리 색상 */
+			border-radius: 10px;       /* 둥근 모서리 */
+			padding: 10px;             /* 테두리와 표 사이의 간격 */
+			background-color: #ffffff; /* 배경색 */
+			overflow: auto;            /* 스크롤바 표시 */
+			box-shadow: 0 0 16px rgba(0, 0, 0, 0.1); /* 그림자 */
+		}
+
+		.table {
+			border-collapse: collapse;
+			width: 100%;
+		}
+
+		.table th, .table td {
+			border: none;
+		}
+
+		/* 기존 CSS 코드는 그대로 유지하면서 추가된 부분만 표시합니다. */
+		.table-responsive {
+			position: relative; /* 상대 위치 설정 */
+		}
+
+		#add-button, input[type="submit"] {
+			z-index: 10; /* z-index 값을 높여서 버튼이 다른 요소 위에 올라오도록 설정 */
+			background-color: #007bff; /* 버튼의 배경색을 파란색으로 설정 */
+			color: #ffffff; /* 버튼의 글자색을 흰색으로 설정 */
+			border: none; /* 버튼의 border를 제거 */
+			position: absolute; /* 절대 위치 설정 */
+			bottom: 0; /* 버튼을 아래로 이동시켜 border와 겹치게 함 */
+			transform: translateY(50%); /* 버튼의 위치를 조정하여 완전히 중앙에 오도록 함 */
+		}
+
+		#add-button {
+			left: 50%; /* 버튼을 중앙에 배치 */
+			transform: translate(-50%, 50%); /* 버튼의 위치를 조정하여 완전히 중앙에 오도록 함 */
+		}
+
+		input[type="submit"] {
+			right: 5%; /* 버튼을 오른쪽에 배치 */
+			transform: translateY(50%); /* 버튼의 위치를 조정하여 완전히 중앙에 오도록 함 */
+		}
+
+		#add-button, input[type="submit"] {
+			margin-bottom: 10px; /* 버튼과 테이블 사이의 간격을 조정 */
+		}
+
+		/* 화면 크기가 768px 이하일 때의 스타일 */
+		@media (max-width: 768px) {
+			#add-button, input[type="submit"] {
+				position: static; /* 기본 위치 설정 */
+				transform: none; /* 위치 조정 제거 */
+				margin-top: 10px; /* 버튼 상단 여백 추가 */
+			}
+
+			.table-responsive {
+				margin-bottom: 10px; /* 버튼과의 간격 조정 */
+			}
+		}
+
+
+	</style>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-latest.min.js"></script>
@@ -75,6 +152,7 @@
 		<div class="logo-text">예산계산여행플래너</div>
 	</a>
 </div>
+<div id="for-button-control">
 <form id="plan-form" action="store" method="post">
 	<div class="container">
 		<div class="table-responsive">
@@ -84,8 +162,7 @@
                         <th width="20%">일정 시작시간</th>
                         <th width="20%">일정 마무리시간</th>
                         <th width="20%">여행지, 교통편 등</th>
-                        <th width="25%">여행 경비(입장료, 교통비 등)</th>
-                        <th width="15%">통화&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+						<th width="40%">여행 경비 및 통화</th> <!-- 열 이름을 변경하였습니다. -->
                     </tr>
                 </thead>
 
@@ -93,9 +170,10 @@
 					<td><input type="time" class="form-control" name="start_time[]" value="00:00"/></td>
 					<td><input type="time" class="form-control" name="end_time[]" value="00:00"/></td>
 					<td><input type="text" class="form-control" name="destination_name[]" value=""/></td>
-					<td><input type="text" class="form-control" name="travel_cost[]" value="0"/></td>
 					<td>
-						<div class="btn-group">
+						<div class="d-flex cost-input-group">
+							<input type="text" class="form-control flex-grow-1" name="travel_cost[]" value="0"/>
+							<div class="btn-group">
 							<button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">KRW</button>
 							<ul class="dropdown-menu">
 								<li><a class="dropdown-item" href="#">KRW</a></li>
@@ -142,238 +220,253 @@
 
 							</ul>
 						</div>
+
 						<input type="hidden" name="currency[]" value="KRW">
 						<button type="button" class="btn btn-danger delete-button" style="margin-left: 6px;">삭제</button>
+						</div>
 					</td>
 				</tr>
 				<tr>
 					<td><input type="time" class="form-control" name="start_time[]" value="00:00"/></td>
 					<td><input type="time" class="form-control" name="end_time[]" value="00:00"/></td>
 					<td><input type="text" class="form-control" name="destination_name[]" value=""/></td>
-					<td><input type="text" class="form-control" name="travel_cost[]" value="0"/></td>
 					<td>
-						<div class="btn-group">
-							<button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">KRW</button>
-							<ul class="dropdown-menu">
-								<li><a class="dropdown-item" href="#">KRW</a></li>
-								<li><a class="dropdown-item" href="#">JPY</a></li>
-								<li><a class="dropdown-item" href="#">AED</a></li> <!-- UAE -->
-								<li><a class="dropdown-item" href="#">AUD</a></li> <!-- Australia -->
-								<li><a class="dropdown-item" href="#">BRL</a></li> <!-- Brazil -->
-								<li><a class="dropdown-item" href="#">CAD</a></li> <!-- Canada -->
-								<li><a class="dropdown-item" href="#">CHF</a></li> <!-- Switzerland -->
-								<li><a class="dropdown-item" href="#">CNY</a></li> <!-- China -->
-								<li><a class="dropdown-item" href="#">CZK</a></li> <!-- Czech Republic -->
-								<li><a class="dropdown-item" href="#">DKK</a></li> <!-- Denmark -->
-								<li><a class="dropdown-item" href="#">EGP</a></li> <!-- Egypt -->
-								<li><a class="dropdown-item" href="#">EUR</a></li> <!-- Eurozone countries -->
-								<li><a class="dropdown-item" href="#">GBP</a></li> <!-- United Kingdom -->
-								<li><a class="dropdown-item" href="#">HKD</a></li> <!-- Hong Kong -->
-								<li><a class="dropdown-item" href="#">HUF</a></li> <!-- Hungary -->
-								<li><a class="dropdown-item" href="#">IDR</a></li> <!-- Indonesia -->
-								<li><a class="dropdown-item" href="#">ILS</a></li> <!-- Israel -->
-								<li><a class="dropdown-item" href="#">INR</a></li> <!-- India -->
-								<li><a class="dropdown-item" href="#">ISK</a></li> <!-- Iceland -->
-								<li><a class="dropdown-item" href="#">JPY</a></li> <!-- Japan -->
-								<li><a class="dropdown-item" href="#">KRW</a></li> <!-- South Korea -->
-								<li><a class="dropdown-item" href="#">KWD</a></li> <!-- Kuwait -->
-								<li><a class="dropdown-item" href="#">MYR</a></li> <!-- Malaysia -->
-								<li><a class="dropdown-item" href="#">MXN</a></li> <!-- Mexico -->
-								<li><a class="dropdown-item" href="#">NOK</a></li> <!-- Norway -->
-								<li><a class="dropdown-item" href="#">NZD</a></li> <!-- New Zealand -->
-								<li><a class="dropdown-item" href="#">PHP</a></li> <!-- Philippines -->
-								<li><a class="dropdown-item" href="#">PLN</a></li> <!-- Poland -->
-								<li><a class="dropdown-item" href="#">QAR</a></li> <!-- Qatar -->
-								<li><a class="dropdown-item" href="#">RON</a></li> <!-- Romania -->
-								<li><a class="dropdown-item" href="#">RUB</a></li> <!-- Russia -->
-								<li><a class="dropdown-item" href="#">SAR</a></li> <!-- Saudi Arabia -->
-								<li><a class="dropdown-item" href="#">SEK</a></li> <!-- Sweden -->
-								<li><a class="dropdown-item" href="#">SGD</a></li> <!-- Singapore -->
-								<li><a class="dropdown-item" href="#">THB</a></li> <!-- Thailand -->
-								<li><a class="dropdown-item" href="#">TRY</a></li> <!-- Turkey -->
-								<li><a class="dropdown-item" href="#">TWD</a></li> <!-- Taiwan -->
-								<li><a class="dropdown-item" href="#">UAH</a></li> <!-- Ukraine -->
-								<li><a class="dropdown-item" href="#">USD</a></li> <!-- United States -->
-								<li><a class="dropdown-item" href="#">VND</a></li> <!-- Vietnam -->
-								<li><a class="dropdown-item" href="#">ZAR</a></li> <!-- South Africa -->
+						<div class="d-flex cost-input-group">
+							<input type="text" class="form-control flex-grow-1" name="travel_cost[]" value="0"/>
+							<div class="btn-group">
+								<button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">KRW</button>
+								<ul class="dropdown-menu">
+									<li><a class="dropdown-item" href="#">KRW</a></li>
+									<li><a class="dropdown-item" href="#">JPY</a></li>
+									<li><a class="dropdown-item" href="#">AED</a></li> <!-- UAE -->
+									<li><a class="dropdown-item" href="#">AUD</a></li> <!-- Australia -->
+									<li><a class="dropdown-item" href="#">BRL</a></li> <!-- Brazil -->
+									<li><a class="dropdown-item" href="#">CAD</a></li> <!-- Canada -->
+									<li><a class="dropdown-item" href="#">CHF</a></li> <!-- Switzerland -->
+									<li><a class="dropdown-item" href="#">CNY</a></li> <!-- China -->
+									<li><a class="dropdown-item" href="#">CZK</a></li> <!-- Czech Republic -->
+									<li><a class="dropdown-item" href="#">DKK</a></li> <!-- Denmark -->
+									<li><a class="dropdown-item" href="#">EGP</a></li> <!-- Egypt -->
+									<li><a class="dropdown-item" href="#">EUR</a></li> <!-- Eurozone countries -->
+									<li><a class="dropdown-item" href="#">GBP</a></li> <!-- United Kingdom -->
+									<li><a class="dropdown-item" href="#">HKD</a></li> <!-- Hong Kong -->
+									<li><a class="dropdown-item" href="#">HUF</a></li> <!-- Hungary -->
+									<li><a class="dropdown-item" href="#">IDR</a></li> <!-- Indonesia -->
+									<li><a class="dropdown-item" href="#">ILS</a></li> <!-- Israel -->
+									<li><a class="dropdown-item" href="#">INR</a></li> <!-- India -->
+									<li><a class="dropdown-item" href="#">ISK</a></li> <!-- Iceland -->
+									<li><a class="dropdown-item" href="#">JPY</a></li> <!-- Japan -->
+									<li><a class="dropdown-item" href="#">KRW</a></li> <!-- South Korea -->
+									<li><a class="dropdown-item" href="#">KWD</a></li> <!-- Kuwait -->
+									<li><a class="dropdown-item" href="#">MYR</a></li> <!-- Malaysia -->
+									<li><a class="dropdown-item" href="#">MXN</a></li> <!-- Mexico -->
+									<li><a class="dropdown-item" href="#">NOK</a></li> <!-- Norway -->
+									<li><a class="dropdown-item" href="#">NZD</a></li> <!-- New Zealand -->
+									<li><a class="dropdown-item" href="#">PHP</a></li> <!-- Philippines -->
+									<li><a class="dropdown-item" href="#">PLN</a></li> <!-- Poland -->
+									<li><a class="dropdown-item" href="#">QAR</a></li> <!-- Qatar -->
+									<li><a class="dropdown-item" href="#">RON</a></li> <!-- Romania -->
+									<li><a class="dropdown-item" href="#">RUB</a></li> <!-- Russia -->
+									<li><a class="dropdown-item" href="#">SAR</a></li> <!-- Saudi Arabia -->
+									<li><a class="dropdown-item" href="#">SEK</a></li> <!-- Sweden -->
+									<li><a class="dropdown-item" href="#">SGD</a></li> <!-- Singapore -->
+									<li><a class="dropdown-item" href="#">THB</a></li> <!-- Thailand -->
+									<li><a class="dropdown-item" href="#">TRY</a></li> <!-- Turkey -->
+									<li><a class="dropdown-item" href="#">TWD</a></li> <!-- Taiwan -->
+									<li><a class="dropdown-item" href="#">UAH</a></li> <!-- Ukraine -->
+									<li><a class="dropdown-item" href="#">USD</a></li> <!-- United States -->
+									<li><a class="dropdown-item" href="#">VND</a></li> <!-- Vietnam -->
+									<li><a class="dropdown-item" href="#">ZAR</a></li> <!-- South Africa -->
 
-							</ul>
+								</ul>
+							</div>
+
+							<input type="hidden" name="currency[]" value="KRW">
+							<button type="button" class="btn btn-danger delete-button" style="margin-left: 6px;">삭제</button>
 						</div>
-						<input type="hidden" name="currency[]" value="KRW">
-						<button type="button" class="btn btn-danger delete-button" style="margin-left: 6px;">삭제</button>
 					</td>
 				</tr>
 				<tr>
 					<td><input type="time" class="form-control" name="start_time[]" value="00:00"/></td>
 					<td><input type="time" class="form-control" name="end_time[]" value="00:00"/></td>
 					<td><input type="text" class="form-control" name="destination_name[]" value=""/></td>
-					<td><input type="text" class="form-control" name="travel_cost[]" value="0"/></td>
 					<td>
-						<div class="btn-group">
-							<button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">KRW</button>
-							<ul class="dropdown-menu">
-								<li><a class="dropdown-item" href="#">KRW</a></li>
-								<li><a class="dropdown-item" href="#">JPY</a></li>
-								<li><a class="dropdown-item" href="#">AED</a></li> <!-- UAE -->
-								<li><a class="dropdown-item" href="#">AUD</a></li> <!-- Australia -->
-								<li><a class="dropdown-item" href="#">BRL</a></li> <!-- Brazil -->
-								<li><a class="dropdown-item" href="#">CAD</a></li> <!-- Canada -->
-								<li><a class="dropdown-item" href="#">CHF</a></li> <!-- Switzerland -->
-								<li><a class="dropdown-item" href="#">CNY</a></li> <!-- China -->
-								<li><a class="dropdown-item" href="#">CZK</a></li> <!-- Czech Republic -->
-								<li><a class="dropdown-item" href="#">DKK</a></li> <!-- Denmark -->
-								<li><a class="dropdown-item" href="#">EGP</a></li> <!-- Egypt -->
-								<li><a class="dropdown-item" href="#">EUR</a></li> <!-- Eurozone countries -->
-								<li><a class="dropdown-item" href="#">GBP</a></li> <!-- United Kingdom -->
-								<li><a class="dropdown-item" href="#">HKD</a></li> <!-- Hong Kong -->
-								<li><a class="dropdown-item" href="#">HUF</a></li> <!-- Hungary -->
-								<li><a class="dropdown-item" href="#">IDR</a></li> <!-- Indonesia -->
-								<li><a class="dropdown-item" href="#">ILS</a></li> <!-- Israel -->
-								<li><a class="dropdown-item" href="#">INR</a></li> <!-- India -->
-								<li><a class="dropdown-item" href="#">ISK</a></li> <!-- Iceland -->
-								<li><a class="dropdown-item" href="#">JPY</a></li> <!-- Japan -->
-								<li><a class="dropdown-item" href="#">KRW</a></li> <!-- South Korea -->
-								<li><a class="dropdown-item" href="#">KWD</a></li> <!-- Kuwait -->
-								<li><a class="dropdown-item" href="#">MYR</a></li> <!-- Malaysia -->
-								<li><a class="dropdown-item" href="#">MXN</a></li> <!-- Mexico -->
-								<li><a class="dropdown-item" href="#">NOK</a></li> <!-- Norway -->
-								<li><a class="dropdown-item" href="#">NZD</a></li> <!-- New Zealand -->
-								<li><a class="dropdown-item" href="#">PHP</a></li> <!-- Philippines -->
-								<li><a class="dropdown-item" href="#">PLN</a></li> <!-- Poland -->
-								<li><a class="dropdown-item" href="#">QAR</a></li> <!-- Qatar -->
-								<li><a class="dropdown-item" href="#">RON</a></li> <!-- Romania -->
-								<li><a class="dropdown-item" href="#">RUB</a></li> <!-- Russia -->
-								<li><a class="dropdown-item" href="#">SAR</a></li> <!-- Saudi Arabia -->
-								<li><a class="dropdown-item" href="#">SEK</a></li> <!-- Sweden -->
-								<li><a class="dropdown-item" href="#">SGD</a></li> <!-- Singapore -->
-								<li><a class="dropdown-item" href="#">THB</a></li> <!-- Thailand -->
-								<li><a class="dropdown-item" href="#">TRY</a></li> <!-- Turkey -->
-								<li><a class="dropdown-item" href="#">TWD</a></li> <!-- Taiwan -->
-								<li><a class="dropdown-item" href="#">UAH</a></li> <!-- Ukraine -->
-								<li><a class="dropdown-item" href="#">USD</a></li> <!-- United States -->
-								<li><a class="dropdown-item" href="#">VND</a></li> <!-- Vietnam -->
-								<li><a class="dropdown-item" href="#">ZAR</a></li> <!-- South Africa -->
+						<div class="d-flex cost-input-group">
+							<input type="text" class="form-control flex-grow-1" name="travel_cost[]" value="0"/>
+							<div class="btn-group">
+								<button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">KRW</button>
+								<ul class="dropdown-menu">
+									<li><a class="dropdown-item" href="#">KRW</a></li>
+									<li><a class="dropdown-item" href="#">JPY</a></li>
+									<li><a class="dropdown-item" href="#">AED</a></li> <!-- UAE -->
+									<li><a class="dropdown-item" href="#">AUD</a></li> <!-- Australia -->
+									<li><a class="dropdown-item" href="#">BRL</a></li> <!-- Brazil -->
+									<li><a class="dropdown-item" href="#">CAD</a></li> <!-- Canada -->
+									<li><a class="dropdown-item" href="#">CHF</a></li> <!-- Switzerland -->
+									<li><a class="dropdown-item" href="#">CNY</a></li> <!-- China -->
+									<li><a class="dropdown-item" href="#">CZK</a></li> <!-- Czech Republic -->
+									<li><a class="dropdown-item" href="#">DKK</a></li> <!-- Denmark -->
+									<li><a class="dropdown-item" href="#">EGP</a></li> <!-- Egypt -->
+									<li><a class="dropdown-item" href="#">EUR</a></li> <!-- Eurozone countries -->
+									<li><a class="dropdown-item" href="#">GBP</a></li> <!-- United Kingdom -->
+									<li><a class="dropdown-item" href="#">HKD</a></li> <!-- Hong Kong -->
+									<li><a class="dropdown-item" href="#">HUF</a></li> <!-- Hungary -->
+									<li><a class="dropdown-item" href="#">IDR</a></li> <!-- Indonesia -->
+									<li><a class="dropdown-item" href="#">ILS</a></li> <!-- Israel -->
+									<li><a class="dropdown-item" href="#">INR</a></li> <!-- India -->
+									<li><a class="dropdown-item" href="#">ISK</a></li> <!-- Iceland -->
+									<li><a class="dropdown-item" href="#">JPY</a></li> <!-- Japan -->
+									<li><a class="dropdown-item" href="#">KRW</a></li> <!-- South Korea -->
+									<li><a class="dropdown-item" href="#">KWD</a></li> <!-- Kuwait -->
+									<li><a class="dropdown-item" href="#">MYR</a></li> <!-- Malaysia -->
+									<li><a class="dropdown-item" href="#">MXN</a></li> <!-- Mexico -->
+									<li><a class="dropdown-item" href="#">NOK</a></li> <!-- Norway -->
+									<li><a class="dropdown-item" href="#">NZD</a></li> <!-- New Zealand -->
+									<li><a class="dropdown-item" href="#">PHP</a></li> <!-- Philippines -->
+									<li><a class="dropdown-item" href="#">PLN</a></li> <!-- Poland -->
+									<li><a class="dropdown-item" href="#">QAR</a></li> <!-- Qatar -->
+									<li><a class="dropdown-item" href="#">RON</a></li> <!-- Romania -->
+									<li><a class="dropdown-item" href="#">RUB</a></li> <!-- Russia -->
+									<li><a class="dropdown-item" href="#">SAR</a></li> <!-- Saudi Arabia -->
+									<li><a class="dropdown-item" href="#">SEK</a></li> <!-- Sweden -->
+									<li><a class="dropdown-item" href="#">SGD</a></li> <!-- Singapore -->
+									<li><a class="dropdown-item" href="#">THB</a></li> <!-- Thailand -->
+									<li><a class="dropdown-item" href="#">TRY</a></li> <!-- Turkey -->
+									<li><a class="dropdown-item" href="#">TWD</a></li> <!-- Taiwan -->
+									<li><a class="dropdown-item" href="#">UAH</a></li> <!-- Ukraine -->
+									<li><a class="dropdown-item" href="#">USD</a></li> <!-- United States -->
+									<li><a class="dropdown-item" href="#">VND</a></li> <!-- Vietnam -->
+									<li><a class="dropdown-item" href="#">ZAR</a></li> <!-- South Africa -->
 
-							</ul>
+								</ul>
+							</div>
+
+							<input type="hidden" name="currency[]" value="KRW">
+							<button type="button" class="btn btn-danger delete-button" style="margin-left: 6px;">삭제</button>
 						</div>
-						<input type="hidden" name="currency[]" value="KRW">
-						<button type="button" class="btn btn-danger delete-button" style="margin-left: 6px;">삭제</button>
 					</td>
 				</tr>
 				<tr>
 					<td><input type="time" class="form-control" name="start_time[]" value="00:00"/></td>
 					<td><input type="time" class="form-control" name="end_time[]" value="00:00"/></td>
 					<td><input type="text" class="form-control" name="destination_name[]" value=""/></td>
-					<td><input type="text" class="form-control" name="travel_cost[]" value="0"/></td>
 					<td>
-						<div class="btn-group">
-							<button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">KRW</button>
-							<ul class="dropdown-menu">
-								<li><a class="dropdown-item" href="#">KRW</a></li>
-								<li><a class="dropdown-item" href="#">JPY</a></li>
-								<li><a class="dropdown-item" href="#">AED</a></li> <!-- UAE -->
-								<li><a class="dropdown-item" href="#">AUD</a></li> <!-- Australia -->
-								<li><a class="dropdown-item" href="#">BRL</a></li> <!-- Brazil -->
-								<li><a class="dropdown-item" href="#">CAD</a></li> <!-- Canada -->
-								<li><a class="dropdown-item" href="#">CHF</a></li> <!-- Switzerland -->
-								<li><a class="dropdown-item" href="#">CNY</a></li> <!-- China -->
-								<li><a class="dropdown-item" href="#">CZK</a></li> <!-- Czech Republic -->
-								<li><a class="dropdown-item" href="#">DKK</a></li> <!-- Denmark -->
-								<li><a class="dropdown-item" href="#">EGP</a></li> <!-- Egypt -->
-								<li><a class="dropdown-item" href="#">EUR</a></li> <!-- Eurozone countries -->
-								<li><a class="dropdown-item" href="#">GBP</a></li> <!-- United Kingdom -->
-								<li><a class="dropdown-item" href="#">HKD</a></li> <!-- Hong Kong -->
-								<li><a class="dropdown-item" href="#">HUF</a></li> <!-- Hungary -->
-								<li><a class="dropdown-item" href="#">IDR</a></li> <!-- Indonesia -->
-								<li><a class="dropdown-item" href="#">ILS</a></li> <!-- Israel -->
-								<li><a class="dropdown-item" href="#">INR</a></li> <!-- India -->
-								<li><a class="dropdown-item" href="#">ISK</a></li> <!-- Iceland -->
-								<li><a class="dropdown-item" href="#">JPY</a></li> <!-- Japan -->
-								<li><a class="dropdown-item" href="#">KRW</a></li> <!-- South Korea -->
-								<li><a class="dropdown-item" href="#">KWD</a></li> <!-- Kuwait -->
-								<li><a class="dropdown-item" href="#">MYR</a></li> <!-- Malaysia -->
-								<li><a class="dropdown-item" href="#">MXN</a></li> <!-- Mexico -->
-								<li><a class="dropdown-item" href="#">NOK</a></li> <!-- Norway -->
-								<li><a class="dropdown-item" href="#">NZD</a></li> <!-- New Zealand -->
-								<li><a class="dropdown-item" href="#">PHP</a></li> <!-- Philippines -->
-								<li><a class="dropdown-item" href="#">PLN</a></li> <!-- Poland -->
-								<li><a class="dropdown-item" href="#">QAR</a></li> <!-- Qatar -->
-								<li><a class="dropdown-item" href="#">RON</a></li> <!-- Romania -->
-								<li><a class="dropdown-item" href="#">RUB</a></li> <!-- Russia -->
-								<li><a class="dropdown-item" href="#">SAR</a></li> <!-- Saudi Arabia -->
-								<li><a class="dropdown-item" href="#">SEK</a></li> <!-- Sweden -->
-								<li><a class="dropdown-item" href="#">SGD</a></li> <!-- Singapore -->
-								<li><a class="dropdown-item" href="#">THB</a></li> <!-- Thailand -->
-								<li><a class="dropdown-item" href="#">TRY</a></li> <!-- Turkey -->
-								<li><a class="dropdown-item" href="#">TWD</a></li> <!-- Taiwan -->
-								<li><a class="dropdown-item" href="#">UAH</a></li> <!-- Ukraine -->
-								<li><a class="dropdown-item" href="#">USD</a></li> <!-- United States -->
-								<li><a class="dropdown-item" href="#">VND</a></li> <!-- Vietnam -->
-								<li><a class="dropdown-item" href="#">ZAR</a></li> <!-- South Africa -->
+						<div class="d-flex cost-input-group">
+							<input type="text" class="form-control flex-grow-1" name="travel_cost[]" value="0"/>
+							<div class="btn-group">
+								<button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">KRW</button>
+								<ul class="dropdown-menu">
+									<li><a class="dropdown-item" href="#">KRW</a></li>
+									<li><a class="dropdown-item" href="#">JPY</a></li>
+									<li><a class="dropdown-item" href="#">AED</a></li> <!-- UAE -->
+									<li><a class="dropdown-item" href="#">AUD</a></li> <!-- Australia -->
+									<li><a class="dropdown-item" href="#">BRL</a></li> <!-- Brazil -->
+									<li><a class="dropdown-item" href="#">CAD</a></li> <!-- Canada -->
+									<li><a class="dropdown-item" href="#">CHF</a></li> <!-- Switzerland -->
+									<li><a class="dropdown-item" href="#">CNY</a></li> <!-- China -->
+									<li><a class="dropdown-item" href="#">CZK</a></li> <!-- Czech Republic -->
+									<li><a class="dropdown-item" href="#">DKK</a></li> <!-- Denmark -->
+									<li><a class="dropdown-item" href="#">EGP</a></li> <!-- Egypt -->
+									<li><a class="dropdown-item" href="#">EUR</a></li> <!-- Eurozone countries -->
+									<li><a class="dropdown-item" href="#">GBP</a></li> <!-- United Kingdom -->
+									<li><a class="dropdown-item" href="#">HKD</a></li> <!-- Hong Kong -->
+									<li><a class="dropdown-item" href="#">HUF</a></li> <!-- Hungary -->
+									<li><a class="dropdown-item" href="#">IDR</a></li> <!-- Indonesia -->
+									<li><a class="dropdown-item" href="#">ILS</a></li> <!-- Israel -->
+									<li><a class="dropdown-item" href="#">INR</a></li> <!-- India -->
+									<li><a class="dropdown-item" href="#">ISK</a></li> <!-- Iceland -->
+									<li><a class="dropdown-item" href="#">JPY</a></li> <!-- Japan -->
+									<li><a class="dropdown-item" href="#">KRW</a></li> <!-- South Korea -->
+									<li><a class="dropdown-item" href="#">KWD</a></li> <!-- Kuwait -->
+									<li><a class="dropdown-item" href="#">MYR</a></li> <!-- Malaysia -->
+									<li><a class="dropdown-item" href="#">MXN</a></li> <!-- Mexico -->
+									<li><a class="dropdown-item" href="#">NOK</a></li> <!-- Norway -->
+									<li><a class="dropdown-item" href="#">NZD</a></li> <!-- New Zealand -->
+									<li><a class="dropdown-item" href="#">PHP</a></li> <!-- Philippines -->
+									<li><a class="dropdown-item" href="#">PLN</a></li> <!-- Poland -->
+									<li><a class="dropdown-item" href="#">QAR</a></li> <!-- Qatar -->
+									<li><a class="dropdown-item" href="#">RON</a></li> <!-- Romania -->
+									<li><a class="dropdown-item" href="#">RUB</a></li> <!-- Russia -->
+									<li><a class="dropdown-item" href="#">SAR</a></li> <!-- Saudi Arabia -->
+									<li><a class="dropdown-item" href="#">SEK</a></li> <!-- Sweden -->
+									<li><a class="dropdown-item" href="#">SGD</a></li> <!-- Singapore -->
+									<li><a class="dropdown-item" href="#">THB</a></li> <!-- Thailand -->
+									<li><a class="dropdown-item" href="#">TRY</a></li> <!-- Turkey -->
+									<li><a class="dropdown-item" href="#">TWD</a></li> <!-- Taiwan -->
+									<li><a class="dropdown-item" href="#">UAH</a></li> <!-- Ukraine -->
+									<li><a class="dropdown-item" href="#">USD</a></li> <!-- United States -->
+									<li><a class="dropdown-item" href="#">VND</a></li> <!-- Vietnam -->
+									<li><a class="dropdown-item" href="#">ZAR</a></li> <!-- South Africa -->
 
-							</ul>
+								</ul>
+							</div>
+
+							<input type="hidden" name="currency[]" value="KRW">
+							<button type="button" class="btn btn-danger delete-button" style="margin-left: 6px;">삭제</button>
 						</div>
-						<input type="hidden" name="currency[]" value="KRW">
-						<button type="button" class="btn btn-danger delete-button" style="margin-left: 6px;">삭제</button>
 					</td>
 				</tr>
 				<tr>
 					<td><input type="time" class="form-control" name="start_time[]" value="00:00"/></td>
 					<td><input type="time" class="form-control" name="end_time[]" value="00:00"/></td>
 					<td><input type="text" class="form-control" name="destination_name[]" value=""/></td>
-					<td><input type="text" class="form-control" name="travel_cost[]" value="0"/></td>
 					<td>
-						<div class="btn-group">
-							<button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">KRW</button>
-							<ul class="dropdown-menu">
-								<li><a class="dropdown-item" href="#">KRW</a></li>
-								<li><a class="dropdown-item" href="#">JPY</a></li>
-								<li><a class="dropdown-item" href="#">AED</a></li> <!-- UAE -->
-								<li><a class="dropdown-item" href="#">AUD</a></li> <!-- Australia -->
-								<li><a class="dropdown-item" href="#">BRL</a></li> <!-- Brazil -->
-								<li><a class="dropdown-item" href="#">CAD</a></li> <!-- Canada -->
-								<li><a class="dropdown-item" href="#">CHF</a></li> <!-- Switzerland -->
-								<li><a class="dropdown-item" href="#">CNY</a></li> <!-- China -->
-								<li><a class="dropdown-item" href="#">CZK</a></li> <!-- Czech Republic -->
-								<li><a class="dropdown-item" href="#">DKK</a></li> <!-- Denmark -->
-								<li><a class="dropdown-item" href="#">EGP</a></li> <!-- Egypt -->
-								<li><a class="dropdown-item" href="#">EUR</a></li> <!-- Eurozone countries -->
-								<li><a class="dropdown-item" href="#">GBP</a></li> <!-- United Kingdom -->
-								<li><a class="dropdown-item" href="#">HKD</a></li> <!-- Hong Kong -->
-								<li><a class="dropdown-item" href="#">HUF</a></li> <!-- Hungary -->
-								<li><a class="dropdown-item" href="#">IDR</a></li> <!-- Indonesia -->
-								<li><a class="dropdown-item" href="#">ILS</a></li> <!-- Israel -->
-								<li><a class="dropdown-item" href="#">INR</a></li> <!-- India -->
-								<li><a class="dropdown-item" href="#">ISK</a></li> <!-- Iceland -->
-								<li><a class="dropdown-item" href="#">JPY</a></li> <!-- Japan -->
-								<li><a class="dropdown-item" href="#">KRW</a></li> <!-- South Korea -->
-								<li><a class="dropdown-item" href="#">KWD</a></li> <!-- Kuwait -->
-								<li><a class="dropdown-item" href="#">MYR</a></li> <!-- Malaysia -->
-								<li><a class="dropdown-item" href="#">MXN</a></li> <!-- Mexico -->
-								<li><a class="dropdown-item" href="#">NOK</a></li> <!-- Norway -->
-								<li><a class="dropdown-item" href="#">NZD</a></li> <!-- New Zealand -->
-								<li><a class="dropdown-item" href="#">PHP</a></li> <!-- Philippines -->
-								<li><a class="dropdown-item" href="#">PLN</a></li> <!-- Poland -->
-								<li><a class="dropdown-item" href="#">QAR</a></li> <!-- Qatar -->
-								<li><a class="dropdown-item" href="#">RON</a></li> <!-- Romania -->
-								<li><a class="dropdown-item" href="#">RUB</a></li> <!-- Russia -->
-								<li><a class="dropdown-item" href="#">SAR</a></li> <!-- Saudi Arabia -->
-								<li><a class="dropdown-item" href="#">SEK</a></li> <!-- Sweden -->
-								<li><a class="dropdown-item" href="#">SGD</a></li> <!-- Singapore -->
-								<li><a class="dropdown-item" href="#">THB</a></li> <!-- Thailand -->
-								<li><a class="dropdown-item" href="#">TRY</a></li> <!-- Turkey -->
-								<li><a class="dropdown-item" href="#">TWD</a></li> <!-- Taiwan -->
-								<li><a class="dropdown-item" href="#">UAH</a></li> <!-- Ukraine -->
-								<li><a class="dropdown-item" href="#">USD</a></li> <!-- United States -->
-								<li><a class="dropdown-item" href="#">VND</a></li> <!-- Vietnam -->
-								<li><a class="dropdown-item" href="#">ZAR</a></li> <!-- South Africa -->
+						<div class="d-flex cost-input-group">
+							<input type="text" class="form-control flex-grow-1" name="travel_cost[]" value="0"/>
+							<div class="btn-group">
+								<button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">KRW</button>
+								<ul class="dropdown-menu">
+									<li><a class="dropdown-item" href="#">KRW</a></li>
+									<li><a class="dropdown-item" href="#">JPY</a></li>
+									<li><a class="dropdown-item" href="#">AED</a></li> <!-- UAE -->
+									<li><a class="dropdown-item" href="#">AUD</a></li> <!-- Australia -->
+									<li><a class="dropdown-item" href="#">BRL</a></li> <!-- Brazil -->
+									<li><a class="dropdown-item" href="#">CAD</a></li> <!-- Canada -->
+									<li><a class="dropdown-item" href="#">CHF</a></li> <!-- Switzerland -->
+									<li><a class="dropdown-item" href="#">CNY</a></li> <!-- China -->
+									<li><a class="dropdown-item" href="#">CZK</a></li> <!-- Czech Republic -->
+									<li><a class="dropdown-item" href="#">DKK</a></li> <!-- Denmark -->
+									<li><a class="dropdown-item" href="#">EGP</a></li> <!-- Egypt -->
+									<li><a class="dropdown-item" href="#">EUR</a></li> <!-- Eurozone countries -->
+									<li><a class="dropdown-item" href="#">GBP</a></li> <!-- United Kingdom -->
+									<li><a class="dropdown-item" href="#">HKD</a></li> <!-- Hong Kong -->
+									<li><a class="dropdown-item" href="#">HUF</a></li> <!-- Hungary -->
+									<li><a class="dropdown-item" href="#">IDR</a></li> <!-- Indonesia -->
+									<li><a class="dropdown-item" href="#">ILS</a></li> <!-- Israel -->
+									<li><a class="dropdown-item" href="#">INR</a></li> <!-- India -->
+									<li><a class="dropdown-item" href="#">ISK</a></li> <!-- Iceland -->
+									<li><a class="dropdown-item" href="#">JPY</a></li> <!-- Japan -->
+									<li><a class="dropdown-item" href="#">KRW</a></li> <!-- South Korea -->
+									<li><a class="dropdown-item" href="#">KWD</a></li> <!-- Kuwait -->
+									<li><a class="dropdown-item" href="#">MYR</a></li> <!-- Malaysia -->
+									<li><a class="dropdown-item" href="#">MXN</a></li> <!-- Mexico -->
+									<li><a class="dropdown-item" href="#">NOK</a></li> <!-- Norway -->
+									<li><a class="dropdown-item" href="#">NZD</a></li> <!-- New Zealand -->
+									<li><a class="dropdown-item" href="#">PHP</a></li> <!-- Philippines -->
+									<li><a class="dropdown-item" href="#">PLN</a></li> <!-- Poland -->
+									<li><a class="dropdown-item" href="#">QAR</a></li> <!-- Qatar -->
+									<li><a class="dropdown-item" href="#">RON</a></li> <!-- Romania -->
+									<li><a class="dropdown-item" href="#">RUB</a></li> <!-- Russia -->
+									<li><a class="dropdown-item" href="#">SAR</a></li> <!-- Saudi Arabia -->
+									<li><a class="dropdown-item" href="#">SEK</a></li> <!-- Sweden -->
+									<li><a class="dropdown-item" href="#">SGD</a></li> <!-- Singapore -->
+									<li><a class="dropdown-item" href="#">THB</a></li> <!-- Thailand -->
+									<li><a class="dropdown-item" href="#">TRY</a></li> <!-- Turkey -->
+									<li><a class="dropdown-item" href="#">TWD</a></li> <!-- Taiwan -->
+									<li><a class="dropdown-item" href="#">UAH</a></li> <!-- Ukraine -->
+									<li><a class="dropdown-item" href="#">USD</a></li> <!-- United States -->
+									<li><a class="dropdown-item" href="#">VND</a></li> <!-- Vietnam -->
+									<li><a class="dropdown-item" href="#">ZAR</a></li> <!-- South Africa -->
 
-							</ul>
+								</ul>
+							</div>
+
+							<input type="hidden" name="currency[]" value="KRW">
+							<button type="button" class="btn btn-danger delete-button" style="margin-left: 6px;">삭제</button>
 						</div>
-						<input type="hidden" name="currency[]" value="KRW">
-						<button type="button" class="btn btn-danger delete-button" style="margin-left: 6px;">삭제</button>
 					</td>
 				</tr>
+
 
 			</table>
 
@@ -382,13 +475,13 @@
 
 </form>
 
-<div style="width: 90%; text-align: center; margin-bottom: 10px;"">
-	<button class="btn btn-primary" id="add-button">일정추가</button>
+	<div style="width: 90%; text-align: center; margin-bottom: 10px;">
+		<button class="btn btn-primary" id="add-button">일정추가</button>
+	</div>
+	<div style="width: 90%; text-align: right;">
+		<input type="submit" class="btn btn-primary" value="예산계산" form="plan-form">
+	</div>
 </div>
-<div style="width: 90%; text-align: right;">
-	<input type="submit" class="btn btn-primary" value="예산계산" form="plan-form">
-</div>
-
 <script>
     $(document).ready(function(){
         $(".dropdown-menu li a").click(function(){
@@ -413,8 +506,7 @@
 				const clickedItem = event.target;
 				if (clickedItem.classList.contains("dropdown-item")) {
 					const selectedCurrency = clickedItem.textContent;
-					document.querySelectorAll("input[name='currency[]']")[index].value = selectedCurrency;
-				}
+					$("input[name='currency[]']").eq(index).val(selectedCurrency);				}
 			});
 		}
 
@@ -428,7 +520,7 @@
 			newRow.classList.add("new-row"); // 새로운 행에 클래스 추가
 
 			const cell0 = newRow.insertCell(0);
-			cell0.innerHTML = '<td><input type="time" class="form-control" name="start_time[]" value="00:00"/></td>';
+			cell0.innerHTML = '<tr><td><input type="time" class="form-control" name="start_time[]" value="00:00"/></td>';
 
 			const cell1 = newRow.insertCell(1);
 			cell1.innerHTML = '<td><input type="time" class="form-control"  name="end_time[]" value="00:00"/></td>';
@@ -437,13 +529,9 @@
 			cell2.innerHTML = '<td><input type="text" class="form-control" name="destination_name[]" value=""/></td>';
 
 			const cell3 = newRow.insertCell(3);
-			cell3.innerHTML = '<td><input type="text" class="form-control" name="travel_cost[]" value="0"/></td></tr>';
-
-			const cell4 = newRow.insertCell(4);
-            cell4.innerHTML = '<td>' +
-                '<div class="btn-group">' +
-                '<button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">KRW</button>' +
-                '<ul class="dropdown-menu">' +
+			cell3.innerHTML = '<td><div class="d-flex cost-input-group">' +
+				'<input type="text" class="form-control flex-grow-1" name="travel_cost[]" value="0"/><div class="btn-group">' +
+				'<button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">KRW</button><ul class="dropdown-menu">' +
 				'<li><a class="dropdown-item" href="#">KRW</a></li>' +
 				'<li><a class="dropdown-item" href="#">JPY</a></li>' +
 				'<li><a class="dropdown-item" href="#">AED</a></li>' +
@@ -487,28 +575,29 @@
 				'<li><a class="dropdown-item" href="#">ZAR</a></li>' +
 				'</ul></div>' +
 				'<input type="hidden" name="currency[]" value="KRW">' +
-                '<button type="button" class="btn btn-danger delete-button" style="margin-left: 10px;">삭제</button></td>';
+                '<button type="button" class="btn btn-danger delete-button" style="margin-left: 10px;">삭제</button></div></td></tr>';
 
-            cell4.querySelector('.dropdown-menu').addEventListener('click', function(event) {
+            cell3.querySelector('.dropdown-menu').addEventListener('click', function(event) {
                 const clickedItem = event.target;
                 if(clickedItem.classList.contains('dropdown-item')) {
-                    cell4.querySelector('.btn').textContent = clickedItem.textContent;
+                    cell3.querySelector('.btn').textContent = clickedItem.textContent;
                 }
             });
 
             rowCount++;
 
 			// 삭제 버튼에 이벤트 리스너 추가
-			cell4.querySelector('.delete-button').addEventListener('click', function() {
+			cell3.querySelector('.delete-button').addEventListener('click', function() {
 				planTable.deleteRow(newRow.rowIndex);
 				rowCount--;
 			});
 
 
 
-			document.querySelectorAll(".dropdown-menu").forEach(function (dropdownMenu, index) {
-				updateCurrencyValue(dropdownMenu, index);
+			$(".dropdown-menu").each(function(index, dropdownMenu) {
+				updateCurrencyValue($(dropdownMenu), index);
 			});
+
 		});
 	});
 </script>
