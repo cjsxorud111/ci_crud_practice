@@ -21,4 +21,15 @@ class Plan extends CI_Controller
 		$this->load->view('trip_plan/schedule', $result);
 	}
 
+	public function search_ajax() {
+
+
+		if ($this->input->is_ajax_request()) {
+			$keyword = $this->input->get('keyword');
+			$results = $this->Plan_model->searchCityNames($keyword);
+
+			echo json_encode($results);
+		}
+	}
+
 }

@@ -121,7 +121,7 @@
 				<tr>
 					<td><input type="time" class="form-control" name="start_time[]" value="00:00"/></td>
 					<td><input type="time" class="form-control" name="end_time[]" value="00:00"/></td>
-					<td><input type="text" class="form-control" name="destination_name[]" value=""/></td>
+					<td><input type="text" class="form-control destination-input" name="destination_name[]" value=""/></td>
 					<td>
 						<div class="d-flex cost-input-group">
 							<input type="text" class="form-control flex-grow-1" name="travel_cost[]" value="0"/>
@@ -432,7 +432,30 @@
 
 </div>
 <script>
-    $(document).ready(function(){
+	$(function () {
+		// .destination-input 클래스를 가진 <input>요소에 문자가 입력될 때마다 호출됨.
+		$(document).on("keyup", ".destination-input", function () {
+			$.ajax({ // Ajax 요청을 작성하고 GET 방식으로 전송함.
+				url: "/trip_plan_controller/plan/search_ajax",
+				data: {keyword: $(this).val()},
+				method: "GET"
+			})
+				// Ajax 응답을 정상적으로 받으면 실행됨.
+				.done(function (result) {
+					// 응답을 받아 해당 input의 바로 아래에 결과를 표시합니다.
+					// 이를 위해 동적으로 생성된 suggestion_box를 사용합니다.
+					let suggestionBox = $(this).next(".suggestion_box");
+					if (!suggestionBox.length) {
+						$(this).after('<div class="suggestion_box"></div>');
+						suggestionBox = $(this).next(".suggestion_box");
+					}
+					suggestionBox.html(result);
+				}.bind(this)); // this를 AJAX 콜백 내부에서 사용하기 위해 bind를 사용합니다.
+		});
+	});
+
+
+	$(document).ready(function(){
         $(".dropdown-menu li a").click(function(){
             $(this).parents('.btn-group').find('.btn').html($(this).text() + ' <span class="caret"></span>');
         });

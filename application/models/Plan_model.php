@@ -17,6 +17,24 @@ class Plan_model extends CI_Model
 		}
 	}
 
+	public function searchCityNames($keyword) {
+
+
+		$xml = simplexml_load_file(APPPATH . '/models/cities.xml'); // XML 파일 경로 지정
+
+
+		$matchingCities = [];
+
+		foreach ($xml->city as $city) {
+			if (strpos(strtolower($city->name), strtolco,ower($keyword)) !== false) {
+				$matchingCities[] = (string)$city->name;
+			}
+		}
+
+		sort($matchingCities); // 정렬
+		return $matchingCities;
+	}
+
 	public function fetch_exchange_rate()
 	{
 		// API 키를 변수에 저장합니다.
