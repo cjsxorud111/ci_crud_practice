@@ -21,6 +21,12 @@ class Plan extends CI_Controller
 		$this->load->view('trip_plan/schedule', $result);
 	}
 
+	public function scrape() {
+
+		$this->Plan_model->scrape();
+
+	}
+
 	public function search_ajax() {
 
 

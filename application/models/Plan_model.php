@@ -2,20 +2,88 @@
 
 class Plan_model extends CI_Model
 {
-
 	public function __construct()
 	{
 		$this->load->database();
 		$this->load->helper('url');
+		include_once APPPATH . '../vendor/simplehtmldom/simplehtmldom/simple_html_dom.php';
+
 
 	}
 
-	public function calculate_cost($cost_array)
-	{
-		foreach ($cost_array as $cost) {
+	public function scrape() {
+		set_time_limit(0);
 
+		$countries = array(
+			'g294196' => 'South_Korea',
+			'g294232' => 'Japan'
+			// ... 다른 국가들 추가
+		);
+
+		foreach ($countries as $code => $country_name) {
+			$offset = 10590;
+
+			while (true) {
+				$url = "https://www.tripadvisor.co.kr/Attractions-{$code}-Activities-oa{$offset}-{$country_name}.html";
+
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL, $url);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537');
+
+				$result = curl_exec($ch);
+
+				$html = str_get_html($result);
+
+				// "검색 결과 전체" 문자열을 포함하는 div를 찾습니다.
+				$searchDiv = null;
+				foreach ($html->find('div') as $div) {
+					if (strpos($div->plaintext, '검색 결과 전체') !== false) {
+						$searchDiv = $div;
+						break;
+					}
+				}
+
+				if ($searchDiv) {
+					$text = $searchDiv->plaintext;
+					preg_match("/([\d,]+) 중 ([\d,]+)-([\d,]+)/", $text, $matches);
+
+					if (isset($matches[1]) && isset($matches[3])) {
+						$startNum = (int) str_replace(",", "", $matches[1]);
+						$lastNum = (int) str_replace(",", "", $matches[3]);
+
+						if ($lastNum >= $startNum - 100) {
+							break;
+						}
+					}
+				}
+
+				$attractions = $html->find('div.XfVdV.o.AIbhI');
+
+				foreach ($attractions as $element) {
+					$attraction_name = trim($element->plaintext);
+
+					$data = array(
+						'country_name' => $country_name,
+						'attraction_name' => $attraction_name
+					);
+					echo "<pre>";
+					print_r($data);
+					echo "</pre>";
+
+					// Insert into database, e.g., $this->db->insert('your_table_name', $data);
+					$this->db->insert('attractions', $data);
+				}
+
+				$offset += 30;
+			}
 		}
 	}
+
+
+
+
+
 
 	public function searchCityNames($keyword) {
 

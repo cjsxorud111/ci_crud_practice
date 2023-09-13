@@ -15,7 +15,8 @@
 		"tecnickcom/tcpdf": "^6.6",
 		"ext-curl": "*",
 		"guzzlehttp/guzzle": "^7.8",
-		"ext-simplexml": "*"
+		"ext-simplexml": "*",
+		"simplehtmldom/simplehtmldom": "2.0-RC2"
 	},
 	"autoload": {
 		"classmap": [
