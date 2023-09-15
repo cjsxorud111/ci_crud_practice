@@ -28,14 +28,17 @@ class Plan extends CI_Controller
 	}
 
 	public function search_ajax() {
-
-
 		if ($this->input->is_ajax_request()) {
 			$keyword = $this->input->get('keyword');
 			$results = $this->Plan_model->searchCityNames($keyword);
 
-			echo json_encode($results);
+			$output = '';
+			foreach($results as $result) {
+				$output .= "<div class='suggestion-item'>" . $result . "</div>"; // 클래스를 추가하여 스타일을 적용할 수 있습니다.
+			}
+			echo $output;
 		}
 	}
+
 
 }

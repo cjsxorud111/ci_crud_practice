@@ -8,23 +8,146 @@ class Plan_model extends CI_Model
 		$this->load->helper('url');
 		include_once APPPATH . '../vendor/simplehtmldom/simplehtmldom/simple_html_dom.php';
 
-
 	}
 
 	public function scrape() {
 		set_time_limit(0);
 
 		$countries = array(
-			'g294196' => 'South_Korea',
-			'g294232' => 'Japan'
-			// ... 다른 국가들 추가
+			/*'g294196' => array('South_Korea', '대한민국'),
+			'g294232' => array('Japan', '일본'),
+			'g294211' => array('China', '중국'),*/
+			'g191' => array('United_States', '미국'),
+			'g294220' => array('Australia', '호주'),
+			'g294280' => array('India', '인도'),
+			'g294260' => array('France', '프랑스'),
+			'g294265' => array('Canada', '캐나다'),
+			'g294217' => array('UK', '영국'),
+			'g294243' => array('Germany', '독일'),
+			'g294253' => array('Italy', '이탈리아'),
+			'g294276' => array('Spain', '스페인'),
+			'g294268' => array('Russia', '러시아'),
+			'g294245' => array('Brazil', '브라질'),
+			'g294251' => array('Mexico', '멕시코'),
+			'g294278' => array('Singapore', '싱가포르'),
+			'g294254' => array('Malaysia', '말레이시아'),
+			'g294262' => array('Indonesia', '인도네시아'),
+			'g294266' => array('Thailand', '태국'),
+			'g294263' => array('Vietnam', '베트남'),
+			'g294259' => array('Philippines', '필리핀'),
+			'g294269' => array('New_Zealand', '뉴질랜드'),
+			'g294255' => array('Netherlands', '네덜란드'),
+			'g294242' => array('Belgium', '벨기에'),
+			'g294241' => array('Switzerland', '스위스'),
+			'g294279' => array('Sweden', '스웨덴'),
+			'g294277' => array('Norway', '노르웨이'),
+			'g294250' => array('Denmark', '덴마크'),
+			'g294223' => array('Poland', '폴란드'),
+			'g294246' => array('Austria', '오스트리아'),
+			'g294221' => array('Hungary', '헝가리'),
+			'g294239' => array('Czech_Republic', '체코'),
+			'g294257' => array('Greece', '그리스'),
+			'g294234' => array('Portugal', '포르투갈'),
+			'g294247' => array('Finland', '핀란드'),
+			'g294235' => array('Ireland', '아일랜드'),
+			'g294227' => array('UAE', '아랍에미리트'),
+			'g294273' => array('Saudi_Arabia', '사우디아라비아'),
+			'g294218' => array('South_Africa', '남아프리카'),
+			'g294224' => array('Egypt', '이집트'),
+			'g294222' => array('Turkey', '터키'),
+			'g294238' => array('Israel', '이스라엘'),
+			'g294258' => array('Argentina', '아르헨티나'),
+			'g294256' => array('Chile', '칠레'),
+			'g294228' => array('Colombia', '콜롬비아'),
+			'g294275' => array('Peru', '페루'),
+			'g294240' => array('Venezuela', '베네수엘라'),
+			'g294272' => array('Ecuador', '에콰도르'),
+			'g294274' => array('Bolivia', '볼리비아'),
+			'g294233' => array('Costa_Rica', '코스타리카'),
+			'g294249' => array('Guatemala', '과테말라'),
+			'g294229' => array('Honduras', '온두라스'),
+			'g294230' => array('El_Salvador', '엘살바도르'),
+			'g294219' => array('Nicaragua', '니카라과'),
+			'g294226' => array('Panama', '파나마'),
+			'g294248' => array('Uruguay', '우루과이'),
+			'g294231' => array('Paraguay', '파라과이'),
+			'g294244' => array('Jamaica', '자메이카'),
+			'g294237' => array('Trinidad_and_Tobago', '트리니다드 토바고'),
+			'g294271' => array('Barbados', '바베이도스'),
+			'g294267' => array('Grenada', '그레나다'),
+			'g294264' => array('Saint_Lucia', '세인트루시아'),
+			'g294261' => array('Dominican_Republic', '도미니카공화국'),
+			'g294225' => array('Haiti', '아이티'),
+			'g294270' => array('Belize', '벨리즈'),
+			'g294252' => array('Guyana', '가이아나'),
+			'g294236' => array('Suriname', '수리남'),
+			'g294213' => array('Fiji', '피지'),
+			'g294215' => array('Papua_New_Guinea', '파푸아뉴기니'),
+			'g294214' => array('Vanuatu', '바누아투'),
+			'g294210' => array('Solomon_Islands', '솔로몬 제도'),
+			'g294209' => array('Samoa', '사모아'),
+			'g294207' => array('Kiribati', '키리바시'),
+			'g294205' => array('Tonga', '통가'),
+			'g294204' => array('Micronesia', '미크로네시아'),
+			'g294203' => array('Palau', '팔라우'),
+			'g294202' => array('Marshall_Islands', '마셜 제도'),
+			'g294200' => array('Nauru', '나우루'),
+			'g294198' => array('Tuvalu', '투발루'),
+			'g294197' => array('Mauritius', '모리셔스'),
+			'g294195' => array('Seychelles', '세이셸'),
+			'g294194' => array('Maldives', '몰디브'),
+			'g294193' => array('Brunei', '브루나이'),
+			'g294192' => array('Bahrain', '바레인'),
+			'g294190' => array('Qatar', '카타르'),
+			'g294189' => array('Oman', '오만'),
+			'g294188' => array('Kuwait', '쿠웨이트'),
+			'g294187' => array('Lebanon', '레바논'),
+			'g294186' => array('Jordan', '요르단')
 		);
 
-		foreach ($countries as $code => $country_name) {
-			$offset = 10590;
+
+		foreach ($countries as $code => $country_info) {
+			$offset = 30;
+			$countryExistsInHTML = false;
+
+			$url = "https://www.tripadvisor.co.kr/Attractions-{$code}-Activities-{$country_info[0]}.html";
+
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537');
+
+			$result = curl_exec($ch);
+			$html = str_get_html($result);
+
+			if (!$html) {
+				echo "Failed to parse HTML.";
+				break;
+			}
+
+			// h1 태그 내부에서 국가명을 찾습니다.
+			$h1Tag = $html->find('h1', 0);
+
+			if ($h1Tag) {
+				if (strpos($h1Tag->plaintext, $country_info[0]) !== false || strpos($h1Tag->plaintext, $country_info[1]) !== false) {
+					$countryExistsInHTML = true;
+				}
+			}
+
+			if (!$countryExistsInHTML) {
+				$data = array(
+					'country_name_en' => $country_info[0],
+					'country_name_kr' => $country_info[1],
+					'attraction_name' => 'notmatched'
+				);
+
+				// Insert into database
+				$this->db->insert('attractions', $data);
+				continue;  // 다음 국가로 이동합니다.
+			}
 
 			while (true) {
-				$url = "https://www.tripadvisor.co.kr/Attractions-{$code}-Activities-oa{$offset}-{$country_name}.html";
+				$url = "https://www.tripadvisor.co.kr/Attractions-{$code}-Activities-oa{$offset}-{$country_info[0]}.html";
 
 				$ch = curl_init();
 				curl_setopt($ch, CURLOPT_URL, $url);
@@ -34,6 +157,11 @@ class Plan_model extends CI_Model
 				$result = curl_exec($ch);
 
 				$html = str_get_html($result);
+
+				if (!$html) {
+					echo "Failed to parse HTML.";
+					break;
+				}
 
 				// "검색 결과 전체" 문자열을 포함하는 div를 찾습니다.
 				$searchDiv = null;
@@ -63,8 +191,15 @@ class Plan_model extends CI_Model
 				foreach ($attractions as $element) {
 					$attraction_name = trim($element->plaintext);
 
+					// 숫자로 시작하고 '.' 또는 공백에 도달할 때까지의 문자열 추출
+					preg_match('/^(\d+)[\.\s]/', $attraction_name, $matches);
+					$attraction_number = isset($matches[1]) ? $matches[1] : null;  // 숫자가 있다면 추출, 없으면 null
+					$attraction_name = preg_replace("/[0-9\.]/", "", $attraction_name);
+
 					$data = array(
-						'country_name' => $country_name,
+						'country_name_en' => $country_info[0],  // English Name
+						'country_name_kr' => $country_info[1],  // Korean Name
+						'attraction_number' => $attraction_number,
 						'attraction_name' => $attraction_name
 					);
 					echo "<pre>";
@@ -82,24 +217,22 @@ class Plan_model extends CI_Model
 
 
 
+	//gpt로 테스트하고싶어
 
 
 
 	public function searchCityNames($keyword) {
 
-
-		$xml = simplexml_load_file(APPPATH . '/models/cities.xml'); // XML 파일 경로 지정
-
+		$this->db->select('attraction_name'); // 검색하려는 컬럼 선택
+		$this->db->like('attraction_name', $keyword, 'after'); // $keyword로 시작하는 도시 이름 검색
+		$this->db->limit(5); // 결과를 5개로 제한
+		$query = $this->db->get('attractions'); // attractions 테이블에서 검색
 
 		$matchingCities = [];
-
-		foreach ($xml->city as $city) {
-			if (strpos(strtolower($city->name), strtolco,ower($keyword)) !== false) {
-				$matchingCities[] = (string)$city->name;
-			}
+		foreach ($query->result() as $row) {
+			$matchingCities[] = $row->attraction_name;
 		}
 
-		sort($matchingCities); // 정렬
 		return $matchingCities;
 	}
 
