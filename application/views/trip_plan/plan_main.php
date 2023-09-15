@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -89,6 +89,35 @@
 			display: inline-block;
 			text-align: left;
 		}
+
+		.suggestion_box, .destination-input {
+			box-sizing: border-box; /* padding과 border가 최종 너비/높이 계산에 포함되도록 합니다. */
+		}
+
+		.suggestion_box {
+			z-index: 1000;  /* 값은 충분히 높게 설정하십시오 */
+			position: absolute;  /* absolute positioning을 사용하여 위치를 제어합니다. */
+			background-color: #fff;  /* 배경색을 설정 */
+			border: 1px solid #ccc;
+			max-height: 100px;
+			overflow-y: auto;
+			width: calc(100% - 2px);
+		}
+
+
+		.destination-input {
+			width: 100%; /* 입력 필드의 너비를 100%로 설정합니다. */
+		}
+		.suggestion-item {
+			padding: 5px 10px;
+			cursor: pointer;
+			border-bottom: 1px solid #eee;
+		}
+
+		.suggestion-item:hover {
+			background-color: #f5f5f5;
+		}
+
 	</style>
 
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
@@ -433,26 +462,35 @@
 </div>
 <script>
 	$(function () {
-		// .destination-input 클래스를 가진 <input>요소에 문자가 입력될 때마다 호출됨.
 		$(document).on("keyup", ".destination-input", function () {
-			$.ajax({ // Ajax 요청을 작성하고 GET 방식으로 전송함.
+			$.ajax({
 				url: "/trip_plan_controller/plan/search_ajax",
 				data: {keyword: $(this).val()},
 				method: "GET"
 			})
-				// Ajax 응답을 정상적으로 받으면 실행됨.
 				.done(function (result) {
-					// 응답을 받아 해당 input의 바로 아래에 결과를 표시합니다.
-					// 이를 위해 동적으로 생성된 suggestion_box를 사용합니다.
 					let suggestionBox = $(this).next(".suggestion_box");
 					if (!suggestionBox.length) {
 						$(this).after('<div class="suggestion_box"></div>');
 						suggestionBox = $(this).next(".suggestion_box");
 					}
 					suggestionBox.html(result);
-				}.bind(this)); // this를 AJAX 콜백 내부에서 사용하기 위해 bind를 사용합니다.
+				}.bind(this));
+		});
+
+		$(document).on("blur", ".destination-input", function () {
+			$(this).next(".suggestion_box").hide();
+		});
+
+		$(document).on("focus", ".destination-input", function(){
+			$(this).next(".suggestion_box").show();
+		});
+
+		$(document).on("mousedown", ".suggestion_box", function (event) {
+			event.preventDefault();
 		});
 	});
+
 
 
 	$(document).ready(function(){
