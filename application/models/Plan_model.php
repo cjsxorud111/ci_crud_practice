@@ -7,7 +7,6 @@ class Plan_model extends CI_Model
 		$this->load->database();
 		$this->load->helper('url');
 		include_once APPPATH . '../vendor/simplehtmldom/simplehtmldom/simple_html_dom.php';
-
 	}
 
 	public function scrape() {

@@ -15,16 +15,12 @@ class Plan extends CI_Controller
 	}
 
 	public function store() {
-
 		$result = $this->Plan_model->store();
-
 		$this->load->view('trip_plan/schedule', $result);
 	}
 
 	public function scrape() {
-
 		$this->Plan_model->scrape();
-
 	}
 
 	public function search_ajax() {
@@ -39,6 +35,6 @@ class Plan extends CI_Controller
 			echo $output;
 		}
 	}
-
-
 }
+
+
