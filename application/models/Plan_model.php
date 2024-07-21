@@ -5,6 +5,7 @@ class Plan_model extends CI_Model
 	public function __construct()
 	{
 		$this->load->database();
+		$this->load->library('session');
 		$this->load->helper('url');
 		include_once APPPATH . '../vendor/simplehtmldom/simplehtmldom/simple_html_dom.php';
 	}
@@ -344,16 +345,26 @@ class Plan_model extends CI_Model
 			);
 			$datas[] = $data;
 		}
-
-		// $datas를 DB에 저장
-		$this->db->insert_batch('travel_plans', $datas);
+		if ($this->session->userdata('user_id')) {
+			// $datas를 DB에 저장
+			$this->db->insert_batch('travel_plans', $datas);
+		}
 
 		$this->update_exchange_rate();
 
-		return array(
+		$result = array(
 			'datas' => $datas,
 			'total_travel_cost' => $this->convert_to_krw_sum($travel_costs, $currency_code)
 		);
+
+		// 결과를 JSON 문자열로 변환
+		$jsonResult = json_encode($result);
+
+		// 쿠키에 저장 (쿠키 이름, 값, 만료 시간(예: 현재 시간 + 3600초 = 1시간 후))
+		setcookie('travel_plan_result', $jsonResult, time() + (86400 * 365), "/");
+
+
+		return $result;
 	}
 
 
