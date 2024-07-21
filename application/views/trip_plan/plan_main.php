@@ -251,7 +251,7 @@
                 var savedFormData = $.cookie('planFormData');
 
                 // 가져온 데이터를 사용하여 폼을 채웁니다. (이 부분은 폼 구조와 데이터 형식에 따라 달라질 수 있습니다.)
-                // 이 예제에서는 간단히 콘솔에 저장된 폼 데이터를 출력만 합니다.
+                // 이 예제에서는 간단히 콘솔에 저장된 폼 데이터를 출력만 합니다
                 console.log('Saved Form Data:', savedFormData);
             }
             
