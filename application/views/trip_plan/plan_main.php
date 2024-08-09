@@ -144,7 +144,7 @@
                 <h3>여행 경비 자동 계산 플래너</h3>
             </div>
             <div class="introduce2">
-                시간과 여행지를 결정하고 여행 경비를 계산하세요.
+                시간과 여행지를 결정하고 여행 경비를 계산하세요
             </div>
             <form id="plan-form" action="store" method="post">
                 <div class="container" style="max-width: 1100px">
