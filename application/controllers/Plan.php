@@ -35,6 +35,27 @@ class Plan extends CI_Controller
 			echo $output;
 		}
 	}
+
+	public function sign_on() {
+		// HTTP 요청에서 JSON 데이터 읽기
+		$json = $this->request->getJSON();
+		if (!$json) {
+			return $this->response->setJSON(['status' => 'error', 'message' => 'Invalid data'])->setStatusCode(400);
+		}
+
+		// 비밀번호를 해시화하여 저장
+		$data = [
+			'username' => $json->username,
+			'password' => password_hash($json->password, PASSWORD_BCRYPT)
+		];
+
+		// 데이터 저장
+		if ($this->Plan_model->saveUser($data)) {
+			return $this->response->setJSON(['status' => 'success'])->setStatusCode(200);
+		} else {
+			return $this->response->setJSON(['status' => 'error', 'message' => 'Failed to save user'])->setStatusCode(500);
+		}
+	}
 }
 
 
