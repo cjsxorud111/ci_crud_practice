@@ -4,132 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>메인</title>
-	<style>
-		.btn-group .dropdown-menu {
-			min-width: 5px;
-			left: 0;
-            width: 60px;
-            max-height: 120px; /* 드롭다운 메뉴의 최대 높이 설정 */
-            overflow-y: auto; /* 내용이 넘치면 스크롤바 표시 */
-		}
-        .dropdown-item {
-            position: relative;
-            padding-left: 7px !important;
-        }
-        .btn.btn-danger.dropdown-toggle {
-            border-top-left-radius: 0;
-            border-bottom-left-radius: 0;
-            background-color: #63b2e2;
-            border-color: #63b2e2;
-            width: 3.8rem;
-            padding-left: 6px;
-        }
-
-		.table {
-			min-width: 800px;
-			overflow: visible;
-			z-index: 5;
-			border-collapse: collapse;
-			width: 100%;
-            
-		}
-        
-		.table th,
-		.table td {
-			white-space: nowrap;
-			text-align: center;
-			border: none;
-            
-		}
-        
-		.table-responsive {
-			border: 1px solid #dee2e6;
-			border-radius: 10px;
-			background-color: #ffffff;
-            overflow: hidden;
-			box-shadow: 0 0 16px rgba(0, 0, 0, 0.1);
-			z-index: 5;
-			position: relative;
-            padding: 1rem 2rem 1.5rem 0.1rem;
-		}
-        
-        .fa.fa-times-circle.delete-button {
-            color: #fe5231;
-        }
-        
-        .form-control.cost{
-			border-top-right-radius: 0;
-			border-bottom-right-radius: 0;
-		}
-
-        .under-btn {
-            position: relative;
-            top: -17px;
-            z-index: 10000;
-        } 
-        
-		#add-button,
-		input[type="submit"] {
-            background-color: #225ec3;
-            color: #ffffff;
-            border: #225ec3;
-			text-align: center;
-            font-weight: bold;
-            font-size: 1em;
-		}
-
-		#for-button-control {
-			text-align: center;
-            padding-bottom: 5rem;
-		}
-
-		#for-button-control .centered-content {
-			display: inline-block;
-			text-align: left;
-		}
-
-		.suggestion_box, .destination-input {
-			box-sizing: border-box; /* padding과 border가 최종 너비/높이 계산에 포함되도록 합니다. */
-		}
-
-		.suggestion_box {
-			z-index: 1000;  /* 값은 충분히 높게 설정하십시오 */
-			position: absolute;  /* absolute positioning을 사용하여 위치를 제어합니다. */
-			background-color: #fff;  /* 배경색을 설정 */
-			border: 1px solid #ccc;
-			max-height: 100px;
-			overflow-y: auto;
-			width: calc(100% - 2px);
-		}
-
-		.destination-input {
-			width: 50%; /* 입력 필드의 너비를 100%로 설정합니다. */
-		}
-		.suggestion-item {
-			padding: 5px 10px;
-			cursor: pointer;
-			border-bottom: 1px solid #eee;
-		}
-
-		.suggestion-item:hover {
-			background-color: #f5f5f5;
-		}
-
-        .shift-right {
-            transform: translateX(0.3em);
-            transition: transform 0.3s ease;
-        }
-
-        .table tbody tr:hover {
-            position: relative;
-            z-index: 1; /* 다른 요소들보다 높은 값으로 설정 */
-        }
-
-        .introduce2 {
-            margin-bottom: 3em;
-        }
-        
-    </style>
+    <link href="<?php echo base_url('public/css/plan_main.css'); ?>" rel="stylesheet" type="text/css">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <script src="https://code.jquery.com/jquery-latest.min.js"></script>
@@ -190,7 +65,24 @@
             </form>
             <div class="under-btn">
                 <button class="btn btn-primary" id="add-button">일정추가</button>
-                <input type="submit" class="btn btn-primary calc-btn" value="예산계산" form="plan-form">
+                <input type="submit" class="btn btn-primary calc-btn" value="예산계산">
+            </div>
+        </div>
+    </div>
+    <!-- Schedule Modal -->
+    <div class="modal fade" id="scheduleModal" tabindex="-1" aria-labelledby="scheduleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="max-width: 1000px;">
+            <div class="modal-content" style="height: 900px;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="scheduleModalLabel">스케쥴</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="max-height: 700px;">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="openSignupModal">회원가입</button>
+                </div>
             </div>
         </div>
     </div>
@@ -198,7 +90,12 @@
     <script>
     
         $(document).ready(function(){
-    
+            document.querySelector('.calc-btn').addEventListener('click', function(event) {
+                event.preventDefault(); // 기본 submit 동작 방지
+                var scheduleModal = new bootstrap.Modal(document.getElementById('scheduleModal'));
+                scheduleModal.show(); // 모달 창 표시
+            });
+            
             $('.dropdown').on('show.bs.dropdown', function() {
                 $(this).closest('.table-responsive').css('overflow', 'hidden');
             });

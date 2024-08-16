@@ -1,0 +1,123 @@
+.btn-group .dropdown-menu {
+    min-width: 5px;
+    left: 0;
+    width: 60px;
+    max-height: 120px; /* 드롭다운 메뉴의 최대 높이 설정 */
+    overflow-y: auto; /* 내용이 넘치면 스크롤바 표시 */
+}
+.dropdown-item {
+    position: relative;
+    padding-left: 7px !important;
+}
+.btn.btn-danger.dropdown-toggle {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    background-color: #63b2e2;
+    border-color: #63b2e2;
+    width: 3.8rem;
+    padding-left: 6px;
+}
+
+.table {
+    min-width: 800px;
+    overflow: visible;
+    z-index: 5;
+    border-collapse: collapse;
+    width: 100%;
+
+}
+
+.table th,
+.table td {
+    white-space: nowrap;
+    text-align: center;
+    border: none;
+
+}
+
+.table-responsive {
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    background-color: #ffffff;
+    overflow: hidden;
+    box-shadow: 0 0 16px rgba(0, 0, 0, 0.1);
+    z-index: 5;
+    position: relative;
+    padding: 1rem 2rem 1.5rem 0.1rem;
+}
+
+.fa.fa-times-circle.delete-button {
+    color: #fe5231;
+}
+
+.form-control.cost{
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.under-btn {
+    position: relative;
+    top: -17px;
+    z-index: 1000;
+}
+
+#add-button,
+input[type="submit"] {
+    background-color: #225ec3;
+    color: #ffffff;
+    border: #225ec3;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1em;
+}
+
+#for-button-control {
+    text-align: center;
+    padding-bottom: 5rem;
+}
+
+#for-button-control .centered-content {
+    display: inline-block;
+    text-align: left;
+}
+
+.suggestion_box, .destination-input {
+    box-sizing: border-box; /* padding과 border가 최종 너비/높이 계산에 포함되도록 합니다. */
+}
+
+.suggestion_box {
+    z-index: 1000;  /* 값은 충분히 높게 설정하십시오 */
+    position: absolute;  /* absolute positioning을 사용하여 위치를 제어합니다. */
+    background-color: #fff;  /* 배경색을 설정 */
+    border: 1px solid #ccc;
+    max-height: 100px;
+    overflow-y: auto;
+    width: calc(100% - 2px);
+}
+
+.destination-input {
+    width: 50%; /* 입력 필드의 너비를 100%로 설정합니다. */
+}
+.suggestion-item {
+    padding: 5px 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+.suggestion-item:hover {
+    background-color: #f5f5f5;
+}
+
+.shift-right {
+    transform: translateX(0.3em);
+    transition: transform 0.3s ease;
+}
+
+.table tbody tr:hover {
+    position: relative;
+    z-index: 1; /* 다른 요소들보다 높은 값으로 설정 */
+}
+
+.introduce2 {
+    margin-bottom: 3em;
+}
