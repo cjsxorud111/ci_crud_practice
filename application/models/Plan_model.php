@@ -215,12 +215,41 @@ class Plan_model extends CI_Model
 		}
 	}
 
+	public function saveUser($data) {
+		// 데이터 삽입
+		$insertData = [
+			'email' => $data['username'], // $data['username']를 email 컬럼에 저장
+			'password' => $data['password'], // 해시화된 비밀번호를 password 컬럼에 저장
+			'created_at' => date('Y-m-d H:i:s'), // 현재 시간을 created_at 필드에 저장
+			'updated_at' => date('Y-m-d H:i:s')  // 현재 시간을 updated_at 필드에 저장
+		];
 
+		return $this->db->insert('users', $insertData); // users 테이블에 데이터 삽입
+	}
 
+	public function getUser($email) {
+		$this->db->where('email', $email);
+		$query = $this->db->get('users');
+
+		if ($query->num_rows() > 0) {
+			return $query->row(); // 해당 이메일로 사용자가 존재하는 경우
+		} else {
+			return false; // 사용자가 존재하지 않는 경우
+		}
+	}
+	
+	public function getUserByEmail($email) {
+		$this->db->where('email', $email);
+		$query = $this->db->get('users');
+
+		if ($query->num_rows() === 1) {
+			return $query->row(); // 사용자가 있으면 첫 번째 결과 반환
+		} else {
+			return null; // 사용자가 없으면 null 반환
+		}
+	}
+	
 	//gpt로 테스트하고싶어
-
-
-
 	public function searchCityNames($keyword) {
 
 		$this->db->select('attraction_name'); // 검색하려는 컬럼 선택
@@ -281,8 +310,7 @@ class Plan_model extends CI_Model
 		// "conversion_rates" 데이터를 반환합니다.
 		return $responseData['conversion_rates'];
 	}
-
-
+	
 	public function update_exchange_rate()
 	{
 		// 1. 마지막 업데이트 날짜 조회
@@ -318,9 +346,7 @@ class Plan_model extends CI_Model
 		}
 
 	}
-
-
-
+	
 	public function store()
 	{
 		$start_times = $this->input->post('start_time');
@@ -406,7 +432,6 @@ class Plan_model extends CI_Model
 
 		return $converted_amount;
 	}
-
 
 	public function getAll($type = "all", $limit = 3, $page = 1)
 	{
