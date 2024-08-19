@@ -32,7 +32,6 @@
 </head>
 <body>
     <div class="content">
-        <?php include 'navbar.php'; ?>
         <div class="container" id="content">
             <br>
         
