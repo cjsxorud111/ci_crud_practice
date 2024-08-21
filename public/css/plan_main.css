@@ -121,3 +121,8 @@ input[type="submit"] {
 .introduce2 {
     margin-bottom: 3em;
 }
+
+#scheduleModal {
+    /* translate() function moves the modal up by 50 pixels. */
+    transform: translate(0, -50px);
+}
