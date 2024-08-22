@@ -75,20 +75,21 @@
             <div class="modal-content" style="height: 900px;">
                 <div class="modal-header">
                     <h5 class="modal-title" id="scheduleModalLabel">스케쥴</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" id="closeScheduleModal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" style="max-height: 700px;">
-                    
+                    <!-- 모달 내용 -->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" id="openSignupModal">회원가입</button>
+                    <button type="button" class="btn btn-primary" id="saveChangesButton" style="display:none;">저장하기</button>
                 </div>
             </div>
         </div>
     </div>
 	<?php include 'footer.php'; ?>
+
     <script>
-    
         $(document).ready(function(){
             document.querySelector('.calc-btn').addEventListener('click', function(event) {
                 event.preventDefault(); // 기본 submit 동작 방지
