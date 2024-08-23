@@ -31,39 +31,33 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
-    <div class="content">
+    <div class="content" style="padding-bottom: 20px;">
         <div class="container" id="content">
-            <br>
-        
-            <h2 class="center" style="margin-top: 20px; margin-bottom: 10px;">여행계획</h2>
-            <br>
-            <div class="table-responsive" id="table-content">
-                <table class="table table-bordered text-center">
+            <table class="table table-bordered text-center">
                     <thead>
-                    <tr>
-                        <th>시작시간</th>
-                        <th>끝시간</th>
-                        <th>여행지</th>
-                        <th>경비</th>
-                    </tr>
+                        <tr>
+                            <th>시간</th>
+                            <th>여행지</th>
+                            <th>경비</th>
+                        </tr>
                     </thead>
                     <tbody>
                     <?php foreach ($datas as $data): ?>
                         <tr>
-                            <td><?=date('H:i', strtotime($data['start_time'])); ?></td>
-                            <td><?=date('H:i', strtotime($data['end_time'])); ?></td>
+                            <td><?=date('H:i', strtotime($data['start_time'])); ?> ~ <?=date('H:i', strtotime($data['end_time'])); ?></td>
                             <td><?=$data['destination_name']; ?></td>
                             <td><?=$data['travel_cost']; ?></td>
                         </tr>
                     <?php endforeach; ?>
                     </tbody>
                 </table>
-            </div>
+            
             <h2 class="center" style="margin-top: 20px;">총 경비</h2>
-            <p class="center" style="font-size: 20px;"><?php echo $total_travel_cost; ?> 원</p>
+            <p class="center" style="font-size: 20px;"><?php echo number_format($total_travel_cost); ?> 원</p>
         </div>
-        
-        <button id="download" class="btn btn-primary" onclick="downloadPDF()" style="display: block; margin: auto;">다운로드</button>
+
+        <button type="button" class="btn btn-primary" id="saveChangesButton" style="display: block; margin: auto;">온라인으로 저장하기</button>
+        <button id="download" class="btn btn-primary" onclick="downloadPDF()" style="display: block; margin: auto; margin-top: 10px;">PDF로 다운로드</button>
     </div>
     <?php include 'footer.php'; ?>
     <script>
